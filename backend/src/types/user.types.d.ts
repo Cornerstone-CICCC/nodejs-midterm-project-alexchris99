@@ -4,6 +4,7 @@ export interface User{
     lname: string,
     age: number,
     nationality: string,
+    mail: string,
     username: string,
     password: string,
 }
