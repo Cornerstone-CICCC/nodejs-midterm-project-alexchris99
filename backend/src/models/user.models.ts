@@ -107,22 +107,6 @@ class userModel {
         // if username and password are correct we return the user
         return this.users[userFound]
     }
-
-    // delete the user
-    deleteUser(username: string){
-        // check for the user
-        const userFound = this.users.findIndex(u => u.username === username)
-
-        // in case user not found
-        if(userFound === -1){
-            return true
-        }
-
-        // delete the user from the db
-        this.users = this.users.splice(userFound, 1)
-
-        return  true
-    }
 }
 
 export default new userModel

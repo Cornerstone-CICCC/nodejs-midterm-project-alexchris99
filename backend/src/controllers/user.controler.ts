@@ -31,8 +31,9 @@ const addUser = async(req: Request<{},{},Omit<User, "id">>, res: Response)=>{
     // destructure the params
     const {fname, lname, age, nationality, mail, username, password} = req.body
 
+    // chekc for the params
     if(!fname || !lname || !age || !nationality || !mail || !username || !password){
-        res.status(200).send(false)
+        res.status(404).send(false)
         return
     }
 
@@ -84,26 +85,23 @@ const logUserIn = async (req: Request, res: Response)=>{
         return
     }
 
+    // generate cookies
+    if(req.session){
+        req.session.isLoggedIn = true
+        req.session.username = username
+    }
+
     // if all ok
     res.status(200).json(userLogin)
 }
 
 // delete user
-const deleteUser = (req: Request<{},{},{username: string}>, res: Response)=>{
+const logout = (req: Request, res: Response)=>{
+    // reset the session values
+    req.session = null
 
-    // destructure the username
-    const {username} = req.body
-
-    // use the model
-    const user = userModel.deleteUser(username)
-
-    // if user not foud
-    if(!user){
-        res.status(500).send(false)
-    }
-
-    // delete the user succesfully
-    res.status(200).send(user)
+    // logout the user succesfully
+    res.status(200).send(true)
 }
 
 export default{
@@ -111,5 +109,5 @@ export default{
     modifyUserInfo,
     getUsernameByUsername,
     logUserIn,
-    deleteUser,
+    logout,
 }
