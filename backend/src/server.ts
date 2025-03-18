@@ -5,8 +5,9 @@ import dotenv from "dotenv"
 import cors from "cors"
 import userRouter from "./routes/user.routes" // user router
 import cartRouter from "./routes/cart.routes" // cart router
-import { escape } from "querystring"
-import { execPath } from "process"
+import pagesRouter from "./routes/pages.routes"
+pagesRouter //pages routes
+
 
 //  permision to acces the vars
 dotenv.config()
@@ -27,7 +28,7 @@ if(!cookie_S || !cookie_En){
 
 //cors-conection to astro
 app.use(cors({
-    origin: "http//:localhost:4321", // astro port
+    origin: "http://localhost:4321", // astro port
     credentials: true
 }))
 
@@ -46,7 +47,8 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
 // Routes
-
+app.use("/",pagesRouter)// pages routes
+app.use("/",userRouter)// user routes
 
 //fallback
 app.use((req: Request, res: Response)=>{
