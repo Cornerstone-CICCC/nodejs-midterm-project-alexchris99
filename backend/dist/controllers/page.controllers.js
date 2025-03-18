@@ -8,7 +8,11 @@ const register = (req, res) => {
 const login = (req, res) => {
     res.status(200).send(true);
 };
+const profile = (req, res) => {
+    res.status(200).send(true);
+};
 exports.default = {
     register,
     login,
+    profile,
 };

@@ -12,5 +12,7 @@ pagesRouter.get("/login", pageControllers.login)
 // get register
 pagesRouter.get("/register",pageControllers.register)
 
+//get profile
+pagesRouter.get("/profile",pageControllers.profile)
 
 export default pagesRouter

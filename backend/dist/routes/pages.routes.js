@@ -12,4 +12,6 @@ const pagesRouter = (0, express_1.Router)();
 pagesRouter.get("/login", page_controllers_1.default.login);
 // get register
 pagesRouter.get("/register", page_controllers_1.default.register);
+//get profile
+pagesRouter.get("/profile", page_controllers_1.default.profile);
 exports.default = pagesRouter;
