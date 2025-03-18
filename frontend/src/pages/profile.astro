@@ -1,0 +1,64 @@
+---
+import Header from "../components/Header.astro"
+import Layout from "../layouts/Layout.astro"
+---
+
+<Layout>
+    <Header/>
+    <div>
+        <h1>Acoount</h1>
+        <form action="/profile" method="post" id="update-form">
+            <label>
+                Firstname: <input type="text" id="fname" name="fname">
+            </label>
+            <label>
+                Lastname: <input type="text" id="lname" name="lname">
+            </label>
+            <label>
+                Age: <input type="number" id="age" name="age">
+            </label>
+            <label>
+                Nationality: <input type="text" id="nationality" name="nationality">
+            </label>
+            <label>
+                Mail: <input type="text" id="mail" name="mail">
+            </label>
+            <label>
+                Username: <input type="text" id="username" name="username">
+            </label>
+            <label>
+                Password: <input type="password" id="password" name="password" placeholder="Type password">
+            </label>
+            <button type="submit">Uppdate profile</button>
+        </form>
+    </div>
+</Layout>
+
+<script>
+    const getUserInfo = async()=>{
+        const res = await fetch(`http://localhost:3000/auth`,{
+			method: "GET",
+			credentials: "include"
+		})
+
+        const responce = await res.json()
+
+       // values
+        const fname = document.querySelector("#fname") as HTMLInputElement
+        const lname = document.querySelector("#lname") as HTMLInputElement
+        const age = document.querySelector("#age") as HTMLInputElement
+        const nationality = document.querySelector("#nationality") as HTMLInputElement
+        const mail = document.querySelector("#mail") as HTMLInputElement
+        const username = document.querySelector("#username") as HTMLInputElement
+        const password = document.querySelector("#password") as HTMLInputElement
+
+        fname.value = `${responce.fname}`
+        lname.value = `${responce.lname}`
+        age.value = `${responce.age}`
+        nationality.value = `${responce.nationality}`
+        mail.value = `${responce.mail}`
+        username.value = `${responce.username}`
+    }
+
+    getUserInfo()
+</script>
