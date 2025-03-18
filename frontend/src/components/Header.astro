@@ -1,0 +1,41 @@
+<header class="header-container">
+    <button class="auth index">Main page</button>
+</header>
+
+<script>
+    // get the buttons
+    const index = document.querySelector(".index")
+
+
+    // get the register page
+    if(index){
+        index.addEventListener("click",async()=>{
+            // fetch for the resgister page
+            const res = await fetch("http://localhost:3000/register",{
+                method: "GET",
+                credentials: "include"
+            })
+
+            // check the response status
+            if(!res){
+                console.log("something went wrong")
+                return
+            }
+
+            window.location.href = "/"
+        })
+    }
+</script>
+
+<style is:inline>
+    .header-container{
+        margin: 1em ;
+        width: auto;
+        height: auto;
+        display: flex;
+        flex-direction: row;
+    }
+    .auth{
+        margin: auto .2em
+    }
+</style>
