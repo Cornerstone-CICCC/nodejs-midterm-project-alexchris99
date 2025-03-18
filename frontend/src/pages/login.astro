@@ -1,0 +1,45 @@
+---
+import Header from "../components/Header.astro"
+import Layout from "../layouts/Layout.astro"
+---
+
+<Layout>
+    <Header/>
+    <div>
+        <h1>Login</h1>
+        <form action="/login" method="post" id="login-form">
+            <label>
+                Username: <input type="text" id="username" name="username">
+            </label>
+            <label>
+                Password: <input type="text" name="password" id="password">
+            </label>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</Layout>
+
+<script>
+    const login = document.querySelector("#login-form") as HTMLFormElement
+    login.addEventListener("submit", async(e)=>{
+        e.preventDefault()
+        // pass the data
+        const formdata = new FormData(e.target as HTMLFormElement)
+        const formObj = Object.fromEntries(formdata.entries())
+        const res = await fetch(`http://localhost:3000/login`,{
+            method: "POST",
+            credentials: "include",
+            headers:{
+                "Content-Type": "application/json"
+            },
+            // send the data
+            body: JSON.stringify(formObj)
+        })
+
+        if(!res.ok){
+            window.location.href = "/login"
+        }
+
+        window.location.href = "/"
+    })
+</script>
