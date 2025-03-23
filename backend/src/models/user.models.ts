@@ -2,11 +2,17 @@ import { User } from "../types/user.types"; // user structure
 import {v4 as uuidv4} from "uuid"; // unique id
 import bcrypt from "bcrypt"; // hash password
 
+
+
 // user class
 class userModel {
 
     // in memory db with type users
     private users: User[] = []
+
+    getUsers(){
+        return this.users
+    }
 
     // create a new user
     async addNewUser(newUser: Omit<User,"id">){
@@ -17,6 +23,15 @@ class userModel {
         }
 
         const hashPaswword = await bcrypt.hash(password, 12) // hash the user password
+
+        //check if the username eist in the db
+        const users = this.getUsers()
+        const userfound = users.find(u => u.username === username)
+
+        if(userfound){
+            return false
+        }
+
 
         const createNewUser: User ={ // creata the new user based on the type
             id: uuidv4(),
@@ -49,11 +64,13 @@ class userModel {
 
         // if we have a new password
 
-        let newPassword = ""
+        let newPassword 
         if(password){
             newPassword = await bcrypt.hash(password, 12)
+            return
         }
     
+        console.log(this.users[userFound])
 
         // modify the user info
         const userModified: User ={
@@ -67,8 +84,8 @@ class userModel {
             password: newPassword ?? this.users[userFound].password
         }
 
+        console.log(userModified)
         this.users[userFound] = userModified
-
         return true
     } 
 

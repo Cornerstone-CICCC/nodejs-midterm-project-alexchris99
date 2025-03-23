@@ -20,6 +20,9 @@ class userModel {
         // in memory db with type users
         this.users = [];
     }
+    getUsers() {
+        return this.users;
+    }
     // create a new user
     addNewUser(newUser) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -28,6 +31,12 @@ class userModel {
                 return false;
             }
             const hashPaswword = yield bcrypt_1.default.hash(password, 12); // hash the user password
+            //check if the username eist in the db
+            const users = this.getUsers();
+            const userfound = users.find(u => u.username === username);
+            if (userfound) {
+                return false;
+            }
             const createNewUser = {
                 id: (0, uuid_1.v4)(),
                 fname,
@@ -54,12 +63,15 @@ class userModel {
                 return false;
             }
             // if we have a new password
-            let newPassword = "";
+            let newPassword;
             if (password) {
                 newPassword = yield bcrypt_1.default.hash(password, 12);
+                return;
             }
+            console.log(this.users[userFound]);
             // modify the user info
             const userModified = Object.assign(Object.assign({}, this.users[userFound]), { fname: fname !== null && fname !== void 0 ? fname : this.users[userFound].fname, lname: lname !== null && lname !== void 0 ? lname : this.users[userFound].lname, age: age !== null && age !== void 0 ? age : this.users[userFound].age, nationality: nationality !== null && nationality !== void 0 ? nationality : this.users[userFound].nationality, mail: mail !== null && mail !== void 0 ? mail : this.users[userFound].mail, username: username !== null && username !== void 0 ? username : this.users[userFound].username, password: newPassword !== null && newPassword !== void 0 ? newPassword : this.users[userFound].password });
+            console.log(userModified);
             this.users[userFound] = userModified;
             return true;
         });

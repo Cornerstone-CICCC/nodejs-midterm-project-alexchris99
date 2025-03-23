@@ -13,6 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_models_1 = __importDefault(require("../models/user.models")); // user model 
+const getUsers = (req, res) => {
+    const users = user_models_1.default.getUsers();
+    res.status(200).json(users);
+};
 // get user by username
 const getUsernameByUsername = (req, res) => {
     var _a;
@@ -47,6 +51,7 @@ const addUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // if the username exist
     if (!addUser) {
         res.status(409).send(false);
+        return;
     }
     // in case the user was succesfull
     res.status(201).json(addUser);
@@ -54,12 +59,13 @@ const addUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 // modiffy user info
 const modifyUserInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // destructure the info 
-    const { fname, lname, age, nationality, mail, username, password } = req.body;
+    const { id, fname, lname, age, nationality, mail, username, password } = req.body;
     // pass the info to the model to modify the user info
-    const newUserInfo = yield user_models_1.default.modifyUser({ fname, lname, age, nationality, mail, username, password });
+    const newUserInfo = yield user_models_1.default.modifyUser({ id, fname, lname, age, nationality, mail, username, password });
     // if the process dint succed
     if (!newUserInfo) {
         res.status(500).send(false);
+        return;
     }
     res.status(200).send(newUserInfo);
 });
@@ -100,4 +106,5 @@ exports.default = {
     getUsernameByUsername,
     logUserIn,
     logout,
+    getUsers
 };

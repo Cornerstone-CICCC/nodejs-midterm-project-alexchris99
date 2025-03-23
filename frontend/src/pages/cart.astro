@@ -1,0 +1,69 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+---
+<Layout>
+    <Header/>
+    <h1>Cart</h1>
+    <div class="container">
+
+    </div>
+</Layout>
+
+<script>
+    interface Product{
+        id: number,
+        title: string,
+        price: number,
+        image: string,
+        quantity: number
+    }
+
+    const getUserCart = async()=>{
+        const res = await fetch("http://localhost:3000/cart",{
+            method: "GET",
+            credentials: "include"
+        })
+        if(!res.ok){
+            // window.location.href = "/"
+            console.log(res)
+            return
+        }
+        const container = document.querySelector(".container") as HTMLDivElement
+        const data = await res.json() as Product[]
+        data.forEach(element =>{ 
+            const cartItem = document.createElement("div")
+            if(cartItem){
+                cartItem.innerHTML = `
+                <h4>${element.title}</h4>
+                <img src="${element.image}">
+                <p>Price: ${element.price}</p>
+                <p>Quantity: ${element.quantity}</p>
+                <button onclick="deduct(${element.id})">Deduct</button>
+            ` 
+                container.appendChild(cartItem)
+            }
+        })
+    }
+
+    getUserCart()
+
+</script>
+
+<script is:inline>
+    const deduct = async(id)=>{
+        // deduct item
+        const res = await fetch("http://localhost:3000/id",{
+            method: "POST",
+            credentials: "include",
+            headers:{
+                    "Content-Type": "application/json"
+                },
+                    // send the data
+                    body: JSON.stringify({id: id})
+        })
+        if(res.ok){
+            window.location.href = "/cart"
+        }        
+    }
+</script>

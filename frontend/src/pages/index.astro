@@ -6,12 +6,74 @@ import Layout from '../layouts/Layout.astro';
 <Layout>
 	<Header/>
 	<div class="container">
-
+		<!-- <IoLogOut /> -->
 	</div>
 </Layout>
 
+<script>
+	const getCookie = async()=>{
+		const res = await fetch(`http://localhost:3000/auth`,{
+			method: "GET",
+			credentials: "include"
+		})
+
+		changueHeader(res.ok)
+	}
+
+	const changueHeader= async(auth: boolean)=>{
+
+		//logout btn
+		if(auth){
+			const header = document.querySelector(".header-container")as HTMLHeadElement
+			header.innerHTML = `
+					<div><img id="profile" src="/public/profile.png" alt="Profile"><img id="logout" src="/public/Logout.png" alt="Logout"></div>
+					<div  class="logo"><p>Virtual Ventures</p><img class="img-logo" src="/public/icon.png" alt="Logo"></div>
+					<div><img id="cart" src="/public/ShoppingCart.png" alt="Shopping Cart"></div>
+				`
+			// profilepage
+			const profilebtn = document.querySelector("#profile") as HTMLDivElement
+			profilebtn.addEventListener("click",async()=>{
+				const res = await fetch("http://localhost:3000/profile",{
+					method: "GET",
+					credentials: "include"
+				})
+
+				if(!res.ok){
+					window.location.href = "/"
+				}
+
+				window.location.href = "/profile"
+
+				//window.location.href = "/profile"
+			})
+			// logout
+			const logoutBtn =  document.querySelector("#logout") as HTMLDivElement
+			logoutBtn.addEventListener("click",async()=>{
+				await fetch(`http://localhost:3000/logout`,{
+					method: "GET",
+					credentials: "include"
+				})
+
+				window.location.href = "/"
+			})
+			// cart
+			const userCart = document.querySelector("#cart") as HTMLDivElement
+			userCart.addEventListener("click",async()=>{
+				await fetch("http://localhost:3000/cart",{
+					method: "GET",
+					credentials: "include"
+				})
+				window.location.href = "/cart"
+			})
+		}
+	}
+
+	getCookie()
+</script>
+
 
 <script is:inline>
+	
 	const getCookie = async()=>{
 		const res = await fetch(`http://localhost:3000/auth`,{
 			method: "GET",
@@ -32,39 +94,16 @@ import Layout from '../layouts/Layout.astro';
 
 	// generate the product info in the web page
 	const genArticles = async(auth)=>{
+		const container = document.querySelector(".container")
 		let articles = await getProducts()
 		articles = articles.products
-		
-		const container = document.querySelector(".container")
-
-		//logout btn
-		if(auth){
-			document.querySelector(".header-container").innerHTML = `
-					<button id="logout">Logout</button>
-					<button id="profile">Profile</button>
-				`
-			const logoutBtn =  document.querySelector("#logout")
-			logoutBtn.addEventListener("click",async()=>{
-				await fetch(`http://localhost:3000/logout`,{
-					method: "GET",
-					credentials: "include"
-				})
-
-				window.location.href = "/"
-			})
-		}
-
 		articles.forEach(element => {
 			//console.log(element)
 			const item = document.createElement("div")
-			item.addEventListener("click",async()=>{
-				window.location.href = `/item/${element.id}`
-			})
-
 			item.classList.add("item-container")
 			item.innerHTML = `
 				<h5 class="item-title">${element.title}</h5>
-				<div class="image-container">
+				<div class="image-container"">
 					<img class="item-image" src="${element.image}">
 				</div>
 				<div class="item-info">
@@ -72,45 +111,76 @@ import Layout from '../layouts/Layout.astro';
 					<p>Price $${element.price}</p>
 				</div>
 			`
+			item.querySelector(".image-container").addEventListener("click",()=>{
+				window.location.href = `/item/${element.id}`
+			})
 			if(auth){
-				const addToCart = document.createElement("button")
-				addToCart.textContent = "Add to cart"
-				item.appendChild(addToCart)
+				const addToCart = document.createElement("div")
+				addToCart.classList.add("add-to-cart")
+				addToCart.innerHTML = `
+					<img src="/public/AddCart.png" alt="Add to cart">
+				`
+				addToCart.addEventListener("click",async()=>{
+					const res = await fetch("http://localhost:3000/product",{
+						method: "POST",
+						credentials: "include",
+						headers:{"Content-Type": "application/json"},
+						// send the data
+						body: JSON.stringify(element)
+						})
+					})
+					item.appendChild(addToCart)
 			}
 			container.appendChild(item)
 		});
 	}
 	
-	const itemInformation = (item)=>{
-		console.log(item)
-	}
 
 	getCookie()
 </script>
 
 <style is:inline>
+	img:hover{
+		cursor: pointer;
+	}
 	.container{
+		width: -90vw;
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		grid-template-rows: auto;
 		gap: 1em;
-		margin: 1em;
+		margin: 1em auto;
+		justify-content: center;
+		justify-items: center;
 	}
 	
 	.item-container{
-		width: 100%;
+		margin: 0.5em 0;
+		background-color: #D9D9D9;
+		color: black;
+		width:18em;
+		height: 16em;
 		display: flex;
 		flex-direction: column;
 		justify-items: center;
 		align-items: center;
+		border-radius: 4px;
 	}
 
-	.item-container > h4{
+	.item-container > h5{
+		margin: .8em 1em;
 		font-family: Arial, Helvetica, sans-serif;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		overflow: hidden;
+		font-size: 0.8em;
 	}
 	
 	.image-container{
-		width: 6em;
+		width: 10em;
+		height: auto;
+		margin: .5em;
 	}
 
 	.item-image{
@@ -120,6 +190,17 @@ import Layout from '../layouts/Layout.astro';
 	.item-info{
 		display: flex;
 		flex-direction: row;
-		gap: 1em;
+		justify-content: space-evenly;
+		gap:0.4em;
+	}
+	.add-to-cart{
+		margin: 1em 0;
+		width: 100%;
+		display: flex;
+		justify-content: flex-end;
+	}
+
+	.add-to-cart > img{
+		margin: 0 1em;
 	}
 </style>

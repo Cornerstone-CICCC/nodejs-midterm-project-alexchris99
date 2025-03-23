@@ -8,6 +8,8 @@ const user_controler_1 = __importDefault(require("../controllers/user.controler"
 // create the Router
 const userRouter = (0, express_1.Router)();
 // Routes
+//get all users
+userRouter.get("/users", user_controler_1.default.getUsers);
 // add a new user
 userRouter.post("/register", user_controler_1.default.addUser);
 // get the user info

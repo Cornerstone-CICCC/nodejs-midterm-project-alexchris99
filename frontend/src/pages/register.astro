@@ -5,32 +5,37 @@ import Layout from "../layouts/Layout.astro"
 
 <Layout>
     <Header/>
-    <div>
-        <h1>Register</h1>
-        <form action="/register" method="post" id="register-form">
-            <label>
-                Firstname: <input type="text" id="fname" name="fname">
-            </label>
-            <label>
-                Lastname: <input type="text" id="lname" name="lname">
-            </label>
-            <label>
-                Age: <input type="number" id="age" name="age">
-            </label>
-            <label>
-                Nationality: <input type="text" id="nationality" name="nationality">
-            </label>
-            <label>
-                Mail: <input type="text" id="mail" name="mail">
-            </label>
-            <label>
-                Username: <input type="text" id="username" name="username">
-            </label>
-            <label>
-                Password: <input type="password" id="password" name="password">
-            </label>
-            <button type="submit">Create Account</button>
-        </form>
+    <div  class="container">
+        <div class="form-container">
+            <h1>Register</h1>
+            <form action="/register" method="post" id="register-form">
+                <label>
+                    <p>First-name:</p> <input type="text" id="fname" name="fname">
+                </label>
+                <label>
+                    <p>Last-name:</p> <input type="text" id="lname" name="lname">
+                </label>
+                <label>
+                    <p>Age:</p> <input type="number" id="age" name="age">
+                </label>
+                <label>
+                    <p>Nationality:</p> <input type="text" id="nationality" name="nationality">
+                </label>
+                <label>
+                    <p>Mail:</p> <input type="text" id="mail" name="mail">
+                </label>
+                <label>
+                    <p>Username:</p> <input type="text" id="username" name="username">
+                </label>
+                <label>
+                    <p>Password:</p> <input type="password" id="password" name="password">
+                </label>
+                <button  class="submit-user" type="submit">Create Account</button>
+            </form>
+        </div>
+        <div class="register-image">
+            <img src="/public/shop.png" alt="Register image">
+        </div>
     </div>
 </Layout>
 
@@ -55,8 +60,66 @@ import Layout from "../layouts/Layout.astro"
 
         if(!res.ok){
             window.location.href = "/register"
+            return
         }
 
         window.location.href = "/login"
     })
 </script>
+
+<style>
+    *{
+        box-sizing: border-box;
+    }
+    .container{
+        display: grid;
+        grid-template-columns:repeat(2,1fr);
+        grid-template-rows: auto;
+
+    }
+    .form-container{
+        display: flex;
+        flex-direction: column;
+    }
+    .form-container > h1{
+        font-size: 4em;
+        text-align: center;
+    }
+    #register-form{
+        display: flex;
+        flex-direction: column;
+        gap:1em;
+    }
+    #register-form > label{
+        font-size: 3em;
+        margin: 0 1em;
+        width: -100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+    #register-form > label >p{
+        width: 50%;
+    }
+    #register-form > label >input{
+        margin: 0 auto;
+        height: 2.5em;
+        border-radius: 10px;
+        width: 20em;
+    }
+
+    .submit-user{
+        font-size: 1em;
+        border: none;
+        color: white;
+        background-color: black;
+        width: 20%;
+        margin: 0 auto;
+        height: 3em;
+    }
+    .register-image{
+        display: flex;
+        justify-content: center;
+    }
+</style>

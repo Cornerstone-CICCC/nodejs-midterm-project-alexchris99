@@ -9,7 +9,14 @@ const cartRouter = Router()
 // add a product
 cartRouter.post("/product", productsControlers.newProduct)
 
+//get user cart
+cartRouter.get("/cart", productsControlers.getCart)
+
+//get userCarts
+cartRouter.get("/carts", productsControlers.usersCart)
+
 // delete product
-cartRouter.post("/cart/:id", productsControlers.deleteProduct)
+cartRouter.post("/id", productsControlers.deleteProduct)
+
 
 export default cartRouter
