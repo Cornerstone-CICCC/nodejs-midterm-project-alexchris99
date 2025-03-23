@@ -6,6 +6,9 @@ const userRouter = Router()
 
 // Routes
 
+//get all users
+userRouter.get("/users",userControler.getUsers)
+
 // add a new user
 userRouter.post("/register",userControler.addUser)
 
@@ -20,5 +23,6 @@ userRouter.post("/login",userControler.logUserIn)
 
 //logout
 userRouter.get("/logout", userControler.logout)
+
 
 export default userRouter

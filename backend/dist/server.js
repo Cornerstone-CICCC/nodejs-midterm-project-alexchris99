@@ -9,6 +9,7 @@ const cookie_session_1 = __importDefault(require("cookie-session"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
 const user_routes_1 = __importDefault(require("./routes/user.routes")); // user router
+const cart_routes_1 = __importDefault(require("./routes/cart.routes")); // cart router
 const pages_routes_1 = __importDefault(require("./routes/pages.routes"));
 pages_routes_1.default; //pages routes
 //  permision to acces the vars
@@ -43,9 +44,10 @@ app.use(express_1.default.urlencoded({ extended: true }));
 // Routes
 app.use("/", pages_routes_1.default); // pages routes
 app.use("/", user_routes_1.default); // user routes
+app.use("/", cart_routes_1.default); // cart route
 //fallback
 app.use((req, res) => {
-    res.status(404).send(false);
+    res.status(404).send('here');
 });
 // start the server
 const PORT = process.env.PORT || 3500;

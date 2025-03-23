@@ -2,6 +2,11 @@ import userModel from "../models/user.models";// user model
 import { Request, Response } from "express";// responces
 import { User } from "../types/user.types";// user type
 
+const getUsers=(req: Request, res: Response)=>{
+    const users = userModel.getUsers()
+    res.status(200).json(users)
+}
+
 // get user by username
 const getUsernameByUsername = (req: Request, res: Response) =>{
     // chech for the user cookie
@@ -43,6 +48,7 @@ const addUser = async(req: Request<{},{},Omit<User, "id">>, res: Response)=>{
     // if the username exist
     if(!addUser){
         res.status(409).send(false)
+        return
     }
 
     // in case the user was succesfull
@@ -52,14 +58,15 @@ const addUser = async(req: Request<{},{},Omit<User, "id">>, res: Response)=>{
 // modiffy user info
 const modifyUserInfo = async(req: Request<{},{},Partial<User>>, res: Response)=>{
     // destructure the info 
-    const {fname, lname, age, nationality, mail, username, password} = req.body
+    const {id,fname, lname, age, nationality, mail, username, password} = req.body
 
     // pass the info to the model to modify the user info
-    const newUserInfo = await userModel.modifyUser({fname, lname, age, nationality, mail, username, password})
+    const newUserInfo = await userModel.modifyUser({id,fname, lname, age, nationality, mail, username, password})
 
     // if the process dint succed
     if(!newUserInfo){
         res.status(500).send(false)
+        return
     }
 
     res.status(200).send(newUserInfo)
@@ -110,4 +117,5 @@ export default{
     getUsernameByUsername,
     logUserIn,
     logout,
+    getUsers
 }

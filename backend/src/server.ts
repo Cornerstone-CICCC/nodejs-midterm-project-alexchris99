@@ -46,13 +46,15 @@ app.use(cookieSession({
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
+
 // Routes
 app.use("/",pagesRouter)// pages routes
 app.use("/",userRouter)// user routes
+app.use("/",cartRouter)// cart route
 
 //fallback
 app.use((req: Request, res: Response)=>{
-    res.status(404).send(false)
+    res.status(404).send('here')
 })
 
 // start the server

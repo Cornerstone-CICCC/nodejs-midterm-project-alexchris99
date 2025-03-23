@@ -10,6 +10,10 @@ const cartRouter = (0, express_1.Router)();
 //Routes
 // add a product
 cartRouter.post("/product", products_controllers_1.default.newProduct);
+//get user cart
+cartRouter.get("/cart", products_controllers_1.default.getCart);
+//get userCarts
+cartRouter.get("/carts", products_controllers_1.default.usersCart);
 // delete product
-cartRouter.post("/cart/:id", products_controllers_1.default.deleteProduct);
+cartRouter.post("/id", products_controllers_1.default.deleteProduct);
 exports.default = cartRouter;

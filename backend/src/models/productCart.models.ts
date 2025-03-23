@@ -1,92 +1,129 @@
 import { Product } from "../types/product"; // product type
+import { cart } from "../types/cart";
+
+
 
 
 class productCart{
     // inmemory db cart
-    private userCart: Partial <Product>[] = []
+    private usersCart : cart[] = []
 
-    // add a new product
-    async addNewProductToCart(newProduct: Product){
-        // destructure the information
-        const {id, title, price, description, category, imageUrl} = newProduct
+    getUsersCart(){
+        return this.usersCart
+    }
 
-        // check for the params
-        if(!id || !title || !price || !description || !category || !imageUrl){
+    // get the db
+    getUserCart(user: string){
+        // check for the index
+        let index = -1
+        for(let i = 0; i < this.usersCart.length; i++){
+            if(this.usersCart[i][user]){
+                index = i
+            }
+        }
+
+        if(index === -1){
             return false
         }
 
-        // check in the cart to see if we have the item
-        const itemFound = this.userCart.findIndex(product => product.id === id )
+        return this.usersCart[index][user]
+    }
 
-        // if product in the cart
-        if(itemFound !== -1){
-            // uppdate the quantity of products in the cart
-            let quantity = this.userCart[itemFound].quantity
-            if(quantity){
-                quantity = quantity+1
-            }
-            // add the new quantity to the cart
-            this.userCart[itemFound] = {
-                ...this.userCart[itemFound],
-                quantity: quantity
-            }
 
-            return this.userCart[itemFound]
+    // add a new product
+    addNewProductToCart(newProduct: Partial<Product>, username: string){
+        // destructure the information
+        const {id,title, price,image, quantity} = newProduct
+        const user = username
+
+        // check for the params
+        if(!id || !title || !price || !image  || !quantity ){
+            return false
+        }       
+        
+        // new usercart
+        const newUserCart = {
+            [user]:[
+                {
+                    id,
+                    title,
+                    price,
+                    image,
+                    quantity
+                }
+            ]
         }
 
-        //else add the item to the cart
-        const newProductToAdd: Partial<Product> = {
+        // newproduct
+        const newItem: Product ={
             id,
             title,
             price,
-            description,
-            category,
-            imageUrl,
-            quantity: 1
+            image,
+            quantity
         }
 
-        this.userCart.push(newProductToAdd)
+        // check if the db is empty
+        if(this.usersCart.length === 0){
+            this.usersCart.push(newUserCart)
+            return this.getUserCart(user)
+        }
 
-        return newProductToAdd
+        const carts = this.usersCart.length
+        let  flag = 0
+        // if the db is not empty check for the user
+        this.usersCart.forEach(cart => {
+            flag +=1
+            // check for the user in the cart
+            if(user in cart){
+                // loop the items in the user cart
+                let counter = 0
+                cart[user].forEach(item => {
+                    counter+=1
+                    // if the id of the item is equal to the id we increase the quantity
+                    if(item.id === id){
+                        item.quantity = item.quantity+1
+                        counter = -1 
+                        return
+                    }
+                })
+                if(counter === cart[user].length){
+                    // if the item doesnt exist we add the item
+                    cart[user].push(newItem)
+                    return    
+                }
+                return 
+            }
+            if(carts === flag){
+                this.usersCart.push(newUserCart)
+            }
+        })
+        return this.getUserCart(user)
     }
 
     // delete one item from the cart 
-    deleteProdut(id: number){
-        // check if the id exist 
-        if(!id){
-            return false
-        }
-
-        // check for the producut in te cart
-        const productFound = this.userCart.findIndex(product => product.id === id)
-
-        // if product not found
-        if(productFound === -1){
-            return false
-        }
-
-        //check for the quantity of the product
-        const productQuantity = this.userCart[productFound].quantity
-
-        // delete the cart item
-        if(productQuantity === 1){
-            this.userCart = this.userCart.splice(productFound,1)
+    reduceProduct(id: number, username: string){
+        // check for the user key 
+        this.usersCart.forEach(cart=>{
+            if(cart[username]){
+                // check fo the item and reduce the quantity 
+                cart[username].forEach((item,index) =>{
+                    // delte the item
+                    if(item.id == id && item.quantity === 1){
+                        console.log("deleting item")
+                        cart[username].splice(index,1)
+                    }
+                    // deducting item
+                    if(item.id === id && item.quantity > 1){
+                        item.quantity -= 1
+                    }
+                })
+            }
             return true
-        }
-
-        // create a new quantity
-        let quantity = this.userCart[productFound].quantity
-        if(quantity){
-            quantity = quantity-1
-        }
-
-        // reduce the quantity
-        this.userCart[productFound] = {
-            ...this.userCart[productFound],
-            quantity: quantity
-        }
+        })
         return true
     }
+    
 }
 
 export default new productCart
