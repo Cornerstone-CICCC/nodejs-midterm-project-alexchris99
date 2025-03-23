@@ -5,31 +5,38 @@ import Layout from "../layouts/Layout.astro"
 
 <Layout>
     <Header/>
-    <div>
-        <h1>Acoount</h1>
+    <div class="container">
+        <img class="profileIcon" src="/public/profileIcon.png" alt="Profile Icon">
         <form action="/profile" method="post" id="update-form">
-            <label>
-                Firstname: <input type="text" id="fname" name="fname">
+            <label hidden>
+                <input type="text" hidden id="id" name="id">
             </label>
-            <label>
-                Lastname: <input type="text" id="lname" name="lname">
-            </label>
-            <label>
-                Age: <input type="number" id="age" name="age">
-            </label>
-            <label>
-                Nationality: <input type="text" id="nationality" name="nationality">
-            </label>
-            <label>
-                Mail: <input type="text" id="mail" name="mail">
-            </label>
-            <label>
-                Username: <input type="text" id="username" name="username">
-            </label>
-            <label>
-                Password: <input type="password" id="password" name="password" placeholder="Type password">
-            </label>
-            <button type="submit">Uppdate profile</button>
+            <div class="gridform">
+                <label>
+                    <p>Firstname:</p> <input type="text" id="fname" name="fname">
+                </label>
+                <label>
+                    <p>Lastname:</p> <input type="text" id="lname" name="lname">
+                </label>
+                <label>
+                    <p>Age:</p> <input type="number" id="age" name="age">
+                </label>
+                <label>
+                    <p>Nationality:</p> <input type="text" id="nationality" name="nationality">
+                </label>
+                <label>
+                    <p>Mail:</p> <input type="text" id="mail" name="mail">
+                </label>
+                <label>
+                    <p>Username:</p> <input type="text" id="username" name="username">
+                </label>
+                <label>
+                    <p>Password:</p> <input type="password" id="password" name="password" placeholder="Type password">
+                </label>
+            </div>
+            <div class="submit-container">
+                <button class="submit-user" type="submit">Uppdate profile</button>
+            </div>
         </form>
     </div>
 </Layout>
@@ -44,6 +51,7 @@ import Layout from "../layouts/Layout.astro"
         const responce = await res.json()
 
        // values
+        const id  = document.querySelector("#id") as HTMLInputElement
         const fname = document.querySelector("#fname") as HTMLInputElement
         const lname = document.querySelector("#lname") as HTMLInputElement
         const age = document.querySelector("#age") as HTMLInputElement
@@ -52,6 +60,7 @@ import Layout from "../layouts/Layout.astro"
         const username = document.querySelector("#username") as HTMLInputElement
         const password = document.querySelector("#password") as HTMLInputElement
 
+        id.value = `${responce.id}`
         fname.value = `${responce.fname}`
         lname.value = `${responce.lname}`
         age.value = `${responce.age}`
@@ -61,4 +70,90 @@ import Layout from "../layouts/Layout.astro"
     }
 
     getUserInfo()
+
+    const updateForm = document.querySelector("#update-form") as HTMLFormElement
+    if(updateForm){
+        updateForm.addEventListener("submit",async(e)=>{
+            e.preventDefault()
+            const formdata = new FormData(e.target as HTMLFormElement)
+            const formObj = Object.fromEntries(formdata.entries())
+            const res = await fetch("http://localhost:3000/profile",{
+                    method: "POST",
+                    credentials: "include",
+                    headers:{
+                    "Content-Type": "application/json"
+                },
+                    // send the data
+                    body: JSON.stringify(formObj)
+                })
+                if(!res.ok){
+                    console.log(res)
+                    return
+                }
+
+            console.log(res)
+        })
+    }
+    
 </script>
+
+<style>
+    .container{
+        width: -100vw;
+        height: -100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    .profileIcon{
+        max-width: 20%;
+        width: auto;
+        margin: 2em auto 0 auto;
+    }
+    .gridform{
+        width: 80%;
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+        grid-template-rows: repeat(4,1fr);
+        margin:3em auto 0 auto;
+        gap: 1em;
+    }
+
+    .gridform > label{
+        color:white;
+        font-size: 2em;
+        margin: 0 1em;
+        width: -100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .gridform > label > p {
+        width: 50%;
+    }
+
+    .gridform > label > input{
+        margin: 0 auto;
+        height: 2.5em;
+        border-radius: 10px;
+        width: 20em;
+        padding: 1em;
+    }
+
+    .submit-container{
+        display: flex;
+        justify-content:center;
+    }
+
+    .submit-user{
+        font-size: 1em;
+        border: none;
+        color: white;
+        background-color: black;
+        width: 20%;
+        margin: 3em auto;
+        height: 3em;
+    }
+    
+</style>

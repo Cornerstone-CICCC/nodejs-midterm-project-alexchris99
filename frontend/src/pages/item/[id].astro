@@ -28,7 +28,9 @@ import Layout from "../../layouts/Layout.astro"
 	}
 			// get products from api source
 	const getProducts = async()=>{
-		const id = Number(window.location.pathname.split("")[window.location.pathname.split("").length-1])
+		const id = Number(window.location.pathname.split("/")
+		[window.location.pathname.split("/").length-1])
+		console.log(id)
 		let res = await fetch(`https://fakestoreapi.in/api/products/${id}`)
 		res = await res.json()
 		//return the article
@@ -42,31 +44,33 @@ import Layout from "../../layouts/Layout.astro"
 		console.log(article)
 		const container = document.querySelector(".container")
 		const item = document.createElement("div")
+		item.classList.add("item")
 		item.innerHTML = `
 			<h5 class="item-title">${article.title}</h5>
-			<div class="image-container">
-				<img class="item-image" src="${article.image}">
-				<span>Model: ${article.model}</span>
-				<span>Brand: ${article.brand}</span>
-			</div>
+			<div class="info-container">
+				<div class="image-container">
+					<img class="item-image" src="${article.image}">
+				</div>
+				<div class="item-info">
+					<p>Category: ${article.category}</p>
+					<p>Price $${article.price}</p>
+					<span>Brand: ${article.brand}</span>
+				</div>
+			</div>	
 			<p>Description: ${article.description}</p>
-			<div class="item-info">
-				<p>Category: ${article.category}</p>
-				<p>Price $${article.price}</p>
-			</div>
 		`
 		if(auth){
 				const addToCart = document.createElement("button")
-				addToCart.textContent = "Add to cart"
-				item.appendChild(addToCart)
+				addToCart.innerHTML = `<div><img src="/public/AddCart.png"></div>`
+				item.querySelector(".item-info").appendChild(addToCart)
 			}
 		container.appendChild(item)
 		//logout btn
 		if(auth){
 			document.querySelector(".header-container").innerHTML = `
-					<button id="main">Back</button>
-					<button id="logout">Logout</button>
-					<button id="profile">Profile</button>
+					<div><img id="home" src="/public/Home.png" alt="Home"><img id="logout" src="/public/Logout.png" alt="Logout"></div>
+					<div  class="logo"><p>Virtual Ventures</p><img class="img-logo" src="/public/icon.png" alt="Logo"></div>
+					<div><img id="cart" src="/public/ShoppingCart.png" alt="Shopping Cart"></div>
 				`
 			const logoutBtn =  document.querySelector("#logout")
 			logoutBtn.addEventListener("click",async()=>{
@@ -88,6 +92,10 @@ import Layout from "../../layouts/Layout.astro"
 		flex-direction: column;
 		gap: 1em;
 		margin: 1em;
+	}
+	.item{
+		display: flex;
+		flex-direction: column;
 	}
 	
 	.item-container{

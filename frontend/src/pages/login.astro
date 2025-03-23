@@ -5,17 +5,22 @@ import Layout from "../layouts/Layout.astro"
 
 <Layout>
     <Header/>
-    <div>
-        <h1>Login</h1>
-        <form action="/login" method="post" id="login-form">
-            <label>
-                Username: <input type="text" id="username" name="username">
-            </label>
-            <label>
-                Password: <input type="password" name="password" id="password">
-            </label>
-            <button type="submit">Login</button>
-        </form>
+    <div class="container">
+        <div class="form-container">
+            <h1>Login</h1>
+            <form action="/login" method="post" id="login-form">
+                <label>
+                    <p>Username:</p> <input type="text" id="username" name="username">
+                </label>
+                <label>
+                    <p>Password:</p> <input type="password" name="password" id="password">
+                </label>
+                <button class="loginUser" type="submit">Login</button>
+            </form>
+        </div>
+        <div class="image-container">
+            <img src="/public/loginimage.png" alt="login Image">
+        </div>
     </div>
 </Layout>
 
@@ -38,8 +43,76 @@ import Layout from "../layouts/Layout.astro"
 
         if(!res.ok){
             window.location.href = "/login"
+            return
         }
 
         window.location.href = "/"
     })
 </script>
+
+<style>
+    .container{
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+        height: 100vh;
+    }
+    .form-container{
+        display: flex;
+        flex-direction: column;
+        width: -100%;
+        gap: 1em;
+    }
+    .form-container > h1{
+        font-size: 4em;
+        text-align: center;
+    }
+    #login-form{
+        margin: 8em 0 0 0;
+        display: flex;
+        flex-direction: column;
+        gap:1em;
+        padding: 0 0 4em 0;
+    }
+    #login-form > label{
+        font-size: 3em;
+        margin: 0 1em;
+        width: -100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #login-form  label >p{
+        width: 50%;
+    }
+
+    #login-form > label >input{
+        margin: 0 auto;
+        height: 2.5em;
+        border-radius: 10px;
+        width: 20em;
+    }
+
+    .loginUser{
+        font-size: 1em;
+        border: none;
+        color: white;
+        background-color: black;
+        width: 20%;
+        margin: 4em auto 0 auto;
+        height: 3em;
+    }
+
+    .image-container{
+        display: flex;
+        justify-content: center;
+        width: -100vh;
+    }
+
+    .image-container > img{
+        max-width: 100%;
+        width: auto;
+    }
+
+</style>
