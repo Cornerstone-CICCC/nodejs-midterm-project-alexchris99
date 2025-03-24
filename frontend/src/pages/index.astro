@@ -5,11 +5,17 @@ import Layout from '../layouts/Layout.astro';
 
 <Layout>
 	<Header/>
+	<section class="search-container">
+		<input class="search" type="text">
+	</section>
 	<section class="container">
 		
 	</section>
 	<div class="pagination">
-		<button onclick="prev()" class="prev">Prev</button>
+		<button onclick="
+import { boolean } from "astro:schema";
+
+prev()" class="prev">Prev</button>
 		<button onclick="next()" class="next">Next</button>
 	</div>
 </Layout>
@@ -72,7 +78,6 @@ import Layout from '../layouts/Layout.astro';
 			gsap.fromTo(".pagination",{y: 500},{opacity:1, y:0,duration: 2});
 		}
 	}
-
 	getCookie()
 </script>
 
@@ -98,14 +103,16 @@ import Layout from '../layouts/Layout.astro';
 		scroll(0,0)
 		getCookie()
 	}
-	
+	let auth 
 	const getCookie = async()=>{
 		const res = await fetch(`http://localhost:3000/auth`,{
 			method: "GET",
 			credentials: "include"
 		})
-
+		auth = res.ok
+		console.log(auth)
 		genArticles(res.ok)
+
 	}
 
 
@@ -117,12 +124,29 @@ import Layout from '../layouts/Layout.astro';
 		return res
 	}	
 
-	// generate the product info in the web page
-	const genArticles = async(auth)=>{
+	//search
+	const search = document.querySelector(".search")
+	if(search){
+		search.addEventListener("change",async(event)=>{
+			//event.target.value
+			const arr = await getProducts()
+			const articles = arr.products
+			const response = await fetch("http://localhost:3000/search",{
+				method: "POST",
+				credentials: "include",
+				headers:{"Content-Type": "application/json"},
+				// send the data
+				body: JSON.stringify({text: event.target.value, arr: articles})
+			})
+			const data = await response.json()
+			genItems(data, auth)
+		})
+	}
+
+	const genItems = (arr, auth)=>{
 		const container = document.querySelector(".container")
-		let articles = await getProducts()
-		articles = articles.products
-		articles.forEach(element => {
+		container.innerHTML = ""
+		arr.forEach(element => {
 			//console.log(element)
 			const item = document.createElement("div")
 			item.classList.add("item-container")
@@ -161,6 +185,13 @@ import Layout from '../layouts/Layout.astro';
 		});
 		gsap.fromTo(".item-container",{y: 500},{opacity:1, y:0,stagger:0.5,duration: 5});
 	}
+
+	// generate the product info in the web page
+	const genArticles = async(auth)=>{
+		let articles = await getProducts()
+		articles = articles.products
+		genItems(articles, auth)
+	}
 	
 	const toast = ()=>{
         Toastify({
@@ -184,6 +215,23 @@ import Layout from '../layouts/Layout.astro';
 	/* Phone */
 	img:hover{
 		cursor: pointer;
+	}
+	.search-container
+	{
+		margin-top: 2em;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+	}
+	.search{
+		height: 3em;
+		width: 20em;
+		border-radius: 10px;
+		color: white;
+		background-color: black;
+		background-image: url("/public/Search.png");
+		background-repeat: no-repeat;
+		padding-left: 3em;
 	}
 	.container{
 		width: 90vw;
@@ -265,7 +313,7 @@ import Layout from '../layouts/Layout.astro';
 		.container{
 			display: grid;
 			grid-template-columns: repeat(3, 1fr);
-			grid-template-rows: repeat(5, 1fr);
+			grid-template-rows: auto;
 		}
 	}
 </style>
