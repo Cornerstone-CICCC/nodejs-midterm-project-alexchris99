@@ -26,7 +26,7 @@ if (!cookie_S || !cookie_En) {
 // Middleware
 //cors-conection to astro
 app.use((0, cors_1.default)({
-    origin: "http://localhost:4321", // astro port
+    origin: "http://localhost:4322", // astro port
     credentials: true
 }));
 //cokies
