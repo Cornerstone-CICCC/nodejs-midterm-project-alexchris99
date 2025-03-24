@@ -93,9 +93,21 @@ const  usersCart = (req: Request, res: Response)=>{
     return
 }
 
+const productsFound = async(req: Request, res: Response)=>{
+    const {text,arr} = req.body
+    const matchingProducts = await productCartModels.search(text, arr)
+    if(!matchingProducts){
+        res.status(404).send(false)
+        return
+    }
+    res.status(200).json(matchingProducts)
+    return 
+}
+
 export default{
     newProduct,
     deleteProduct,
     getCart,
-    usersCart
+    usersCart,
+    productsFound
 }

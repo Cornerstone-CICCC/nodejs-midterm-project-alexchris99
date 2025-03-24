@@ -82,9 +82,20 @@ const usersCart = (req, res) => {
     res.status(200).json(db);
     return;
 };
+const productsFound = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { text, arr } = req.body;
+    const matchingProducts = yield productCart_models_1.default.search(text, arr);
+    if (!matchingProducts) {
+        res.status(404).send(false);
+        return;
+    }
+    res.status(200).json(matchingProducts);
+    return;
+});
 exports.default = {
     newProduct,
     deleteProduct,
     getCart,
-    usersCart
+    usersCart,
+    productsFound
 };

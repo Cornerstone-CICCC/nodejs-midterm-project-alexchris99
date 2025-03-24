@@ -4,7 +4,7 @@ import { cart } from "../types/cart";
 
 
 
-class productCart{
+class ProductCart{
     // inmemory db cart
     private usersCart : cart[] = []
 
@@ -122,7 +122,17 @@ class productCart{
         })
         return true
     }
+
+    //search
+    search(text:string, obj: Product[] ){
+        const foundItems = obj.filter(item =>{
+            if(item.title.toLowerCase().includes(text.toLowerCase())){
+                return item
+            }
+        })
+        return foundItems
+    }
     
 }
 
-export default new productCart
+export default new ProductCart
