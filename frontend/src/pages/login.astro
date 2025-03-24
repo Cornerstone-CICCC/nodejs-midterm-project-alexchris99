@@ -1,0 +1,169 @@
+---
+import Header from "../components/Header.astro"
+import Layout from "../layouts/Layout.astro"
+---
+
+<Layout>
+    <Header/>
+    <div class="container">
+        <div class="form-container">
+            <h1 class="login-title">Login</h1>
+            <form action="/login" method="post" id="login-form">
+                <label>
+                    <p>Username:</p> <input type="text" id="username" name="username" required>
+                </label>
+                <label>
+                    <p>Password:</p> <input type="password" name="password" id="password" required>
+                </label>
+                <button class="loginUser" type="submit">Login</button>
+            </form>
+        </div>
+        <div class="image-container">
+            <img src="/public/loginimage.png" alt="login Image">
+        </div>
+    </div>
+</Layout>
+
+<script>
+    import { gsap } from "gsap";
+    import Toastify from 'toastify-js'
+    gsap.fromTo(".header-container",{x: -500},{opacity:1, x:0,duration: 2})
+    gsap.from(".login-title",{opacity:0,duration: 2})
+    gsap.fromTo("#login-form",{x: -500},{opacity:1, x:0,duration: 2})
+    gsap.fromTo(".image-container",{x: 500},{opacity:1, x:0,duration: 2})
+    const login = document.querySelector("#login-form") as HTMLFormElement
+    login.addEventListener("submit", async(e)=>{
+        e.preventDefault()
+        // pass the data
+        const formdata = new FormData(e.target as HTMLFormElement)
+        const formObj = Object.fromEntries(formdata.entries())
+        const res = await fetch(`http://localhost:3000/login`,{
+            method: "POST",
+            credentials: "include",
+            headers:{
+                "Content-Type": "application/json"
+            },
+            // send the data
+            body: JSON.stringify(formObj)
+        })
+
+        if(!res.ok){
+            window.location.href = "/login"
+            return
+        }
+        toast()
+        
+        setTimeout(() => {
+            window.location.href = "/"
+        }, 2000);    
+    })
+
+    const toast = ()=>{
+        Toastify({
+            text: "Login succesfully",
+            duration: 2000,
+            style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+        }
+        }).showToast();
+    }
+</script>
+
+<style>
+    .container{
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+    }
+    .form-container{
+        display: flex;
+        flex-direction: column;
+        width: -60%;
+        margin: 0 auto;
+        gap: 1em;
+    }
+    .form-container > h1{
+        font-size: 4em;
+        text-align: center;
+        margin: 0 auto;
+    }
+    #login-form{
+        margin: 8em 0 0 0;
+        display: flex;
+        flex-direction: column;
+        gap:1em;
+        padding: 0 0 4em 0;
+        background-image: url("/public/loginimage.png");
+        background-repeat: no-repeat;
+        background-size:contain;
+        background-position: center;
+    }
+    #login-form > label{
+        font-size: 2em;
+        margin: 0 0.8em;
+        width: -100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #login-form  label >p{
+        width: 50%;
+    }
+
+    #login-form > label >input{
+        margin: 0 auto;
+        height: 2.5em;
+        border-radius: 10px;
+        width: 16em;
+        padding: 1em;
+    }
+
+    .loginUser{
+        font-size: 1em;
+        border: none;
+        color: white;
+        background-color: black;
+        width: 20%;
+        margin: 4em auto 0 auto;
+        height: 3em;
+    }
+    .loginUser:hover{
+        cursor: pointer;
+    }
+    .image-container{
+        display: none;
+    }
+
+    .image-container > img{
+        max-width: 100%;
+        width: auto;
+    }
+
+    @media (min-width: 1200px) {
+        .container{
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            height: 100vh;
+        }
+        .form-container{
+            width: -100%;
+        }
+        #login-form{
+            background-image: none;
+        }
+        #login-form > label{
+            font-size: 3em;
+            margin: 0 1em; 
+        }
+
+        #login-form > label >input{
+            width: 20em;
+        }
+        .image-container{
+            display: flex;
+        }
+    }
+
+</style>

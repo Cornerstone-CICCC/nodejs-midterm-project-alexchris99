@@ -1,0 +1,73 @@
+
+<header class="header-container">
+    <div class="auth index"><img src="/public/Home.png" alt=""></div>
+    <div class="logo"><p>Virtual Ventures</p><img class="img-logo" src="/public/icon.png" alt="Logo"></div>
+    <div></div>
+</header>
+
+<script>
+    // get the buttons
+    const index = document.querySelector(".index")
+
+
+    // get the register page
+    if(index){
+        index.addEventListener("click",async()=>{
+            // fetch for the resgister page
+            const res = await fetch("http://localhost:3000/register",{
+                method: "GET",
+                credentials: "include"
+            })
+
+            // check the response status
+            if(!res){
+                console.log("something went wrong")
+                return
+            }
+
+            window.location.href = "/"
+        })
+    }
+</script>
+
+<style is:inline>
+    *{
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    body{
+        background-color:#222831 ;
+        color: #fff;
+    }
+    .header-container{
+        background-color: #000;
+        margin: .5em 1em;
+        width: -100vw;
+        height: auto;
+        display: flex;
+        flex-direction: row;
+        justify-content:space-between;
+        align-items: center;
+        border-radius: 10px;
+    }
+
+    .header-container>div{
+        margin: .5em;
+    }
+
+    .header-container>div:hover{
+        cursor: pointer;
+    }
+
+    .logo{
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-items: center;
+        align-items: center;
+    }
+    .img-logo{
+        width: 40%;
+    }
+</style>

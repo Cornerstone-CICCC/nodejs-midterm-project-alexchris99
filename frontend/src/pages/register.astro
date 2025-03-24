@@ -1,0 +1,170 @@
+---
+import Header from "../components/Header.astro"
+import Layout from "../layouts/Layout.astro"
+---
+
+<Layout>
+    <Header/>
+    <div  class="container">
+        <div class="form-container">
+            <h1 class="register-title">Register</h1>
+            <form action="/register" method="post" id="register-form">
+                <label>
+                    <p>First-name:</p> <input type="text" id="fname" name="fname" required>
+                </label>
+                <label>
+                    <p>Last-name:</p> <input type="text" id="lname" name="lname" required>
+                </label>
+                <label>
+                    <p>Age:</p> <input type="number" id="age" name="age" required>
+                </label>
+                <label>
+                    <p>Nationality:</p> <input type="text" id="nationality" name="nationality" required>
+                </label>
+                <label>
+                    <p>Mail:</p> <input type="text" id="mail" name="mail" required>
+                </label>
+                <label>
+                    <p>Username:</p> <input type="text" id="username" name="username" required>
+                </label>
+                <label>
+                    <p>Password:</p> <input type="password" id="password" name="password" required>
+                </label>
+                <button  class="submit-user" type="submit">Create Account</button>
+            </form>
+        </div>
+        <div class="register-image">
+            <img src="/public/shop.png" alt="Register image">
+        </div>
+    </div>
+</Layout>
+
+<script>
+    import { gsap } from "gsap";
+    import Toastify from 'toastify-js'
+    gsap.fromTo(".header-container",{x: -500},{opacity:1, x:0,duration: 2})
+    gsap.from(".register-title",{opacity:0,duration: 2})
+    gsap.fromTo("#register-form",{x: -500},{opacity:1, x:0,duration: 2})
+    gsap.fromTo(".register-image",{x: 500},{opacity:1, x:0,duration: 2})
+    const register = document.querySelector("#register-form") as HTMLFormElement
+    register.addEventListener("submit",async(e)=>{
+        e.preventDefault()
+
+        // pass the data
+        const formdata = new FormData(e.target as HTMLFormElement)
+        const formObj = Object.fromEntries(formdata.entries())
+
+        const res = await fetch("http://localhost:3000/register",{
+            method: "POST",
+            credentials: "include",
+            headers:{
+                "Content-Type": "application/json"
+            },
+            // send the data
+            body: JSON.stringify(formObj)
+        })
+
+        if(!res.ok){
+            window.location.href = "/register"
+            return
+        }
+        toast()
+        setTimeout(() => {
+            window.location.href = "/login"
+        }, 3000);       
+    })
+
+    const toast = ()=>{
+        Toastify({
+            text: "User created",
+            duration: 3000,
+            style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+        }
+        }).showToast();
+    }
+</script>
+
+<style>
+    *{
+        box-sizing: border-box;
+    }
+    .container{
+        display: flex;
+        flex-direction: column;
+
+    }
+    .form-container{
+        display: flex;
+        flex-direction: column;
+    }
+    .form-container > h1{
+        margin-top: .5em;
+        font-size: 4em;
+        text-align: center;
+    }
+    #register-form{
+        display: flex;
+        flex-direction: column;
+        align-content: space-evenly; 
+        gap:2em;
+        background-image: url("/public/shop.png") ;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 20em;
+    }
+    #register-form > label{
+        font-size: 2em;
+        margin: 0 .8em;
+        width: -100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+    #register-form > label >p{
+        width: 50%;
+    }
+    #register-form > label >input{
+        margin: 0 auto;
+        height: 2.5em;
+        border-radius: 10px;
+        width: 14em;
+        padding: 1em;
+    }
+
+    .submit-user{
+        font-size: 1em;
+        border: none;
+        color: white;
+        background-color: black;
+        width: 20%;
+        margin: 0 auto;
+        height: 3em;
+    }
+    .register-image{
+        display: none;
+    }
+
+    @media (min-width: 1200px) {
+        .container{
+            display: grid;
+            grid-template-columns:repeat(2,1fr);
+            grid-template-rows: auto;
+        }
+        .register-image{
+            display: flex;
+            justify-content: center;
+        }
+        #register-form{
+            background-image: none;
+        }
+        #register-form > label{
+            font-size: 3em;
+        }
+        #register-form > label >input{
+            width: 20em;
+            margin: 0 1em;
+        }
+    }
+</style>
