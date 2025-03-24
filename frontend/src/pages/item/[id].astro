@@ -112,10 +112,6 @@ import Layout from "../../layouts/Layout.astro"
 </script>
 
 <style is:inline>
-
-	img{
-		cursor: pointer;
-	}
 	.container{
 		display: flex;
 		flex-direction: column;
@@ -135,21 +131,22 @@ import Layout from "../../layouts/Layout.astro"
 	
 	.info-container{
 		display: flex;
-		flex-direction: row;
-		align-content: space-around;
-		justify-content: space-around;
+		flex-direction: column;
+		align-items: center;
+		gap: 1em;
 	}
 
-	.item > h1{
+	.item-title{
 		margin: 1em 1em 0 1em;
 		font-family: Arial, Helvetica, sans-serif;
 	}
 	
 	.image-container{
-		width: 20em;
+		width: 18em;
 	}
 
 	.item-image{
+		border-radius: 10px;
 		max-width: 100%;
 		width: auto;
 	}
@@ -158,16 +155,29 @@ import Layout from "../../layouts/Layout.astro"
 		flex-direction: column;
 		gap: 1em;
 		font-size: 2em;
-		justify-content: center;
-		align-content: center;
+		align-items: center;
 	}
 
 	.desc{
+		text-align: justify;
 		margin: 1em;
 		font-size: 1.4em;
 	}
 
 	.add-image > img{
 		width: 1.8em;
+	}
+	
+	@media (min-width: 1200px) {
+		.info-container{
+			display: flex;
+			flex-direction: row;
+			align-content: space-around;
+			justify-content: space-around;
+		}
+		
+		.image-container{
+			width: 20em;
+		}
 	}
 </style>

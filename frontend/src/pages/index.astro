@@ -5,8 +5,12 @@ import Layout from '../layouts/Layout.astro';
 
 <Layout>
 	<Header/>
-	<div class="container">
-		<!-- <IoLogOut /> -->
+	<section class="container">
+		
+	</section>
+	<div class="pagination">
+		<button onclick="prev()" class="prev">Prev</button>
+		<button onclick="next()" class="next">Next</button>
 	</div>
 </Layout>
 
@@ -71,6 +75,26 @@ import Layout from '../layouts/Layout.astro';
 
 
 <script is:inline>
+	let page = 1 
+	const next = async()=>{
+		page+=1
+		const container = document.querySelector(".container")
+		container.innerHTML = ""
+		scroll(0,0)
+		getCookie()
+	}
+
+	const prev = async()=>{
+		if(page === 1){
+			scroll(0,0)
+			return
+		}
+		page -= 1
+		const container = document.querySelector(".container")
+		container.innerHTML = ""
+		scroll(0,0)
+		getCookie()
+	}
 	
 	const getCookie = async()=>{
 		const res = await fetch(`http://localhost:3000/auth`,{
@@ -84,7 +108,7 @@ import Layout from '../layouts/Layout.astro';
 
 	// get products from api source
 	const getProducts = async()=>{
-		let res = await fetch('https://fakestoreapi.in/api/products')
+		let res = await fetch(`https://fakestoreapi.in/api/products?page=${page}&limit=15`)
 		res = await res.json()
 		// return the articles
 		return res
@@ -119,6 +143,7 @@ import Layout from '../layouts/Layout.astro';
 					<img src="/public/AddCart.png" alt="Add to cart">
 				`
 				addToCart.addEventListener("click",async()=>{
+					toast()
 					const res = await fetch("http://localhost:3000/product",{
 						method: "POST",
 						credentials: "include",
@@ -133,18 +158,29 @@ import Layout from '../layouts/Layout.astro';
 		});
 	}
 	
+	const toast = ()=>{
+        Toastify({
+            text: "Added to Cart",
+            duration: 3000,
+            style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+        }
+        }).showToast();
+    }
 
 	getCookie()
 </script>
 
 <style is:inline>
+	/* Phone */
 	img:hover{
 		cursor: pointer;
 	}
 	.container{
 		width: -90vw;
+		height: -100vh;
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: 1;
 		grid-template-rows: auto;
 		gap: 1em;
 		margin: 1em auto;
@@ -182,6 +218,7 @@ import Layout from '../layouts/Layout.astro';
 	}
 
 	.item-image{
+		border-radius: 10px;
 		max-width: 100%;
 		width: auto;
 	}
@@ -200,5 +237,29 @@ import Layout from '../layouts/Layout.astro';
 
 	.add-to-cart > img{
 		margin: 0 1em;
+	}
+	.pagination{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 4em;
+		height: 8em;
+	}
+	.next,.prev{
+		width: 6em;
+		height: 4em;
+		background: none;
+		border: none;
+		color: white;
+	}
+	.next,.prev:hover{
+		cursor: pointer;
+	}
+	@media (min-width:1200px) {	
+		.container{
+			grid-template-columns: repeat(3, 1fr);
+			grid-template-rows: repeat(3, 1fr);
+			
+		}
 	}
 </style>

@@ -11,7 +11,9 @@ import Header from "../components/Header.astro";
             <p class="items-quantity"></p>
             <p class="total"></p>
         </div>
-        <div class="cart-items"></div>
+        <div class="cart-items">
+            <h2>Car empty</h2>
+        </div>
     </div>
 </Layout>
 
@@ -50,6 +52,7 @@ import Header from "../components/Header.astro";
             return
         }
         const container = document.querySelector(".cart-items") as HTMLDivElement
+        container.innerHTML = ""
         const data = await res.json() as Product[]
         let total: number = 0
         let quantity: number = 0
@@ -127,11 +130,9 @@ import Header from "../components/Header.astro";
 				window.location.href = "/profile"
             })
     getUserCart()
-
 </script>
 
 <script is:inline>
-
     const deduct = async(id)=>{
         // deduct item
         const res = await fetch("http://localhost:3000/id",{
@@ -144,7 +145,10 @@ import Header from "../components/Header.astro";
                     body: JSON.stringify({id: id})
         })
         if(res.ok){
-            window.location.href = "/cart"
+            toast("Item deducted")
+            setTimeout(() => {
+                window.location.href = "/cart"
+            }, 2000);
         }        
     }
 
@@ -158,23 +162,41 @@ import Header from "../components/Header.astro";
             body: JSON.stringify({id:idItem, title:titleItrem, image:imageItem, price: priceItem})
 		})
         if(res.ok){
-            window.location.href= "/cart"
+            toast("Item added")
+            setTimeout(() => {
+                window.location.href= "/cart"
+            }, 2000);
         }
+    }
+
+    const toast = (text)=>{
+        Toastify({
+            text: `${text}`,
+            duration: 3000,
+            style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+        }
+        }).showToast();
     }
 </script>
 
 <style is:inline>
     .container{
         display: flex;
-        flex-direction: row;
+        flex-direction: column-reverse;
         gap: 10em;
+        position: relative;
     }
     .user-info{
+        top: 1em;
+        position: sticky;
         display: flex;
         flex-direction: column;
+        align-items: center;
         gap: 1em;
         text-align: center;
         margin: 2em;
+        height: 30em;
     }
     .username{
         font-size: 2em;
@@ -188,8 +210,8 @@ import Header from "../components/Header.astro";
     }
     .item{
         color: black;
-        width: 40em;
-        height: 21em;
+        width: 22em;
+        height: 30em;
         background-color: #C8D6E0;
         margin: 0 auto;
         border-radius: 10px;
@@ -197,12 +219,17 @@ import Header from "../components/Header.astro";
     
     .item > h2{
         margin: 1em;
+        display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		overflow: hidden;
     }
 
     .article-container{
         display: flex;
-        flex-direction: row;
-        justify-content: space-around;
+        flex-direction: column;
+        justify-items: center;
+        align-items: center;
         margin: 1em;
     }
     
@@ -229,5 +256,81 @@ import Header from "../components/Header.astro";
     }
     .actions > div:hover{
         cursor: pointer;
+    }
+    @media (min-width: 1200px) {
+        .container{
+            display: flex;
+            flex-direction: row;
+            gap: 10em;
+            position: relative;
+        }
+        .user-info{
+            top: 1em;
+            position: sticky;
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+            text-align: center;
+            margin: 2em;
+            height: 30em;
+        }
+        .username{
+            font-size: 2em;
+            text-align: center;
+        }
+        .user-info > img{
+            width: 15em;
+        }
+        .items-quantity, .total{
+            font-size: 1.4em;
+        }
+        .item{
+            color: black;
+            width: 40em;
+            height: 22em;
+            background-color: #C8D6E0;
+            margin: 0 auto;
+            border-radius: 10px;
+        }
+        
+        .item > h2{
+            margin: 1em;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+        }
+
+        .article-container{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            margin: 1em;
+        }
+        
+        .image-container{
+            width: 15em;
+        }
+        .image-container > img{
+            max-width: 100%;
+            width: auto;
+        }
+        .info-container > p{
+            font-size: 1.4em;
+        }
+        .info-container{
+            display: flex;
+            flex-direction: column;
+            gap: 2em;
+            justify-content: center;
+        }
+        .actions{
+            display: flex;
+            flex-direction: row;
+            gap: 2em;
+        }
+        .actions > div:hover{
+            cursor: pointer;
+        }
     }
 </style>
