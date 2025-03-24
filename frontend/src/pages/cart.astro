@@ -18,6 +18,8 @@ import Header from "../components/Header.astro";
 </Layout>
 
 <script>
+    import { gsap } from "gsap";
+    gsap.fromTo(".header-container",{x: -500},{opacity:1, x:0,duration: 2})
     interface Product{
         id: number,
         title: string,
@@ -69,7 +71,7 @@ import Header from "../components/Header.astro";
                         <img src="${element.image}">
                     </div>
                     <div class="info-container">
-                        <p>Price: $${element.price}</p>
+                        <p>Price: $${element.price} Cad</p>
                         <p>Quantity: ${element.quantity}</p>
                         <div class="actions">
                             <div onclick="deduct(${element.id})">
@@ -86,13 +88,15 @@ import Header from "../components/Header.astro";
         // total from teh cart
         const totalItems = document.querySelector(".total") as HTMLParagraphElement
         if(totalItems){
-            totalItems.innerHTML = `Total $${total}`
+            totalItems.innerHTML = `Total $${total} Cad`
         }
         // qunatrity
         const quantityItems = document.querySelector(".items-quantity") as HTMLParagraphElement
         if(quantityItems){
             quantityItems.textContent = `${quantity} Items`
         }
+        gsap.fromTo(".user-info",{x: -500},{opacity:1, x:0,duration: 2})
+        gsap.fromTo(".item",{y: 500},{opacity:1, y:0, stagger: 0.5,duration: 2})
     }
 
     const header = document.querySelector(".header-container") as HTMLHeadElement

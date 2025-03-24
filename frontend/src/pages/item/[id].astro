@@ -19,13 +19,13 @@ import Layout from "../../layouts/Layout.astro"
 </Layout>
 
 <script is:inline>
-
 	const getCookie = async()=>{
 		const res = await fetch(`http://localhost:3000/auth`,{
 			method: "GET",
 			credentials: "include"
 		})
 		genArticles(res.ok)
+		gsap.fromTo(".header-container",{x: -500},{opacity:1, x:0,duration: 2})
 	}
 			// get products from api source
 	const getProducts = async()=>{
@@ -53,7 +53,7 @@ import Layout from "../../layouts/Layout.astro"
 				<div class="item-info">
 					<p>Brand: ${article.brand}</p>
 					<p>Category: ${article.category}</p>
-					<p>Price $${article.price}</p>
+					<p>Price $${article.price} Cad</p>
 				</div>
 			</div>	
 			<p class="desc">${article.description}</p>
@@ -107,6 +107,11 @@ import Layout from "../../layouts/Layout.astro"
 				})
 			})
 		}
+		gsap.fromTo(".container",{y: 500},{opacity:1, y:0,duration: 2})
+		gsap.from(".item-title",{opacity:0, duration:1},">")
+		gsap.from(".image-container",{opacity:0, duration:1},">")
+		gsap.from(".item-info",{opacity:0, duration:1},">")
+		gsap.from(".desc",{opacity:0, duration:1},">")
 	}
 	getCookie()
 </script>

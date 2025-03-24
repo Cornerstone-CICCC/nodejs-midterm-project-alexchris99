@@ -39,6 +39,10 @@ import Layout from "../layouts/Layout.astro"
 </Layout>
 
 <script>
+    import { gsap } from "gsap";
+    gsap.fromTo(".header-container",{x: -500},{opacity:1, x:0,duration: 2})
+    gsap.from(".profileIcon",{opacity:0,duration: 2})
+    gsap.fromTo("#update-form",{y: 500},{opacity:1, y:0,duration: 2})
     import Toastify from 'toastify-js'
     const getUserInfo = async()=>{
         const res = await fetch(`http://localhost:3000/auth`,{

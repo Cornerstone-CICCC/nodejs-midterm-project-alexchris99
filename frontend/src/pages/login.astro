@@ -7,7 +7,7 @@ import Layout from "../layouts/Layout.astro"
     <Header/>
     <div class="container">
         <div class="form-container">
-            <h1>Login</h1>
+            <h1 class="login-title">Login</h1>
             <form action="/login" method="post" id="login-form">
                 <label>
                     <p>Username:</p> <input type="text" id="username" name="username" required>
@@ -25,7 +25,12 @@ import Layout from "../layouts/Layout.astro"
 </Layout>
 
 <script>
+    import { gsap } from "gsap";
     import Toastify from 'toastify-js'
+    gsap.fromTo(".header-container",{x: -500},{opacity:1, x:0,duration: 2})
+    gsap.from(".login-title",{opacity:0,duration: 2})
+    gsap.fromTo("#login-form",{x: -500},{opacity:1, x:0,duration: 2})
+    gsap.fromTo(".image-container",{x: 500},{opacity:1, x:0,duration: 2})
     const login = document.querySelector("#login-form") as HTMLFormElement
     login.addEventListener("submit", async(e)=>{
         e.preventDefault()

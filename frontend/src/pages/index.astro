@@ -15,6 +15,7 @@ import Layout from '../layouts/Layout.astro';
 </Layout>
 
 <script>
+	import { gsap } from "gsap";
 	const getCookie = async()=>{
 		const res = await fetch(`http://localhost:3000/auth`,{
 			method: "GET",
@@ -25,7 +26,7 @@ import Layout from '../layouts/Layout.astro';
 	}
 
 	const changueHeader= async(auth: boolean)=>{
-
+		gsap.fromTo(".header-container",{x: -500},{opacity:1, x:0,duration: 2})
 		//logout btn
 		if(auth){
 			const header = document.querySelector(".header-container")as HTMLHeadElement
@@ -67,6 +68,8 @@ import Layout from '../layouts/Layout.astro';
 				})
 				window.location.href = "/cart"
 			})
+			gsap.fromTo(".header-container",{x: -500},{opacity:1, x:0,duration: 2});
+			gsap.fromTo(".pagination",{y: 500},{opacity:1, y:0,duration: 2});
 		}
 	}
 
@@ -144,7 +147,7 @@ import Layout from '../layouts/Layout.astro';
 				`
 				addToCart.addEventListener("click",async()=>{
 					toast()
-					const res = await fetch("http://localhost:3000/product",{
+					await fetch("http://localhost:3000/product",{
 						method: "POST",
 						credentials: "include",
 						headers:{"Content-Type": "application/json"},
@@ -156,6 +159,7 @@ import Layout from '../layouts/Layout.astro';
 			}
 			container.appendChild(item)
 		});
+		gsap.fromTo(".item-container",{y: 500},{opacity:1, y:0,stagger:0.5,duration: 5});
 	}
 	
 	const toast = ()=>{
@@ -172,25 +176,27 @@ import Layout from '../layouts/Layout.astro';
 </script>
 
 <style is:inline>
+	*{
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
 	/* Phone */
 	img:hover{
 		cursor: pointer;
 	}
 	.container{
-		width: -90vw;
-		height: -100vh;
-		display: grid;
-		grid-template-columns: 1;
-		grid-template-rows: auto;
+		width: 90vw;
+		display: flex;
+		flex-direction: column;
 		gap: 1em;
 		margin: 1em auto;
-		justify-content: center;
-		justify-items: center;
+		align-items: center;
 	}
 	
 	.item-container{
-		margin: 0.5em 0;
-		background-color: #D9D9D9;
+		margin: 0.5em auto;
+		background-color: #8d8d8d;
 		color: black;
 		width:18em;
 		height: 20.5em;
@@ -257,9 +263,9 @@ import Layout from '../layouts/Layout.astro';
 	}
 	@media (min-width:1200px) {	
 		.container{
+			display: grid;
 			grid-template-columns: repeat(3, 1fr);
-			grid-template-rows: repeat(3, 1fr);
-			
+			grid-template-rows: repeat(5, 1fr);
 		}
 	}
 </style>
