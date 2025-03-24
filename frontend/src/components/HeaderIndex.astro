@@ -1,0 +1,97 @@
+---
+
+---
+
+
+<header class="header-container">
+    <div class="auth  register"><img src="/public/AddUser.png" alt="Login"></div>
+    <div class="logo"><p>Virtual Ventures</p><img class="img-logo" src="/public/icon.png" alt="Logo"></div>
+    <div class="auth login"><img src="/public/login.png" alt="Register"></div>
+</header>
+
+<script>
+    // get the buttons
+    const register = document.querySelector(".register")
+    const login = document.querySelector(".login")
+
+
+    // get the register page
+    if(register){
+        register.addEventListener("click",async()=>{
+            // fetch for the resgister page
+            const res = await fetch("http://localhost:3000/register",{
+                method: "GET",
+                credentials: "include"
+            })
+
+            // check the response status
+            if(!res){
+                console.log("something went wrong")
+                return
+            }
+
+            window.location.href = "/register"
+        })
+    }
+    // get the register page
+    if(login){
+        login.addEventListener("click",async()=>{
+            // fetch for the resgister page
+            const res = await fetch("http://localhost:3000/login",{
+                method: "GET",
+                credentials: "include"
+            })
+
+            // check the response status
+            if(!res){
+                console.log("something went wrong")
+                return
+            }
+
+            window.location.href = "/login"
+        })
+    }
+</script>
+
+<style is:inline>
+    *{
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    body{
+        background-color:#222831 ;
+        color: #fff;
+    }
+    .header-container{
+        background-color: #000;
+        margin: .5em 1em;
+        width: -100vw;
+        height: auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 10px;
+    }
+
+    .header-container>div{
+        margin: .5em;
+    }
+
+    .header-container>div:hover{
+        cursor: pointer;
+    }
+    
+    .logo{
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-items: center;
+        align-items: center;
+    }
+    .img-logo{
+        width: 40%;
+
+    }
+</style>

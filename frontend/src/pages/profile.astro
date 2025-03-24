@@ -1,0 +1,190 @@
+---
+import Header from "../components/Header.astro"
+import Layout from "../layouts/Layout.astro"
+---
+
+<Layout>
+    <Header/>
+    <div class="container">
+        <img class="profileIcon" src="/public/profileIcon.png" alt="Profile Icon">
+        <form action="/profile" method="post" id="update-form">
+            <label hidden>
+                <input type="text" hidden id="id" name="id">
+            </label>
+            <div class="gridform">
+                <label>
+                    <p>Firstname:</p> <input type="text" id="fname" name="fname">
+                </label>
+                <label>
+                    <p>Lastname:</p> <input type="text" id="lname" name="lname">
+                </label>
+                <label>
+                    <p>Age:</p> <input type="number" id="age" name="age">
+                </label>
+                <label>
+                    <p>Nationality:</p> <input type="text" id="nationality" name="nationality">
+                </label>
+                <label>
+                    <p>Mail:</p> <input type="text" id="mail" name="mail">
+                </label>
+                <label>
+                    <p>Password:</p> <input type="password" id="password" name="password" placeholder="Type password">
+                </label>
+            </div>
+            <div class="submit-container">
+                <button class="submit-user" type="submit">Uppdate profile</button>
+            </div>
+        </form>
+    </div>
+</Layout>
+
+<script>
+    import { gsap } from "gsap";
+    gsap.fromTo(".header-container",{x: -500},{opacity:1, x:0,duration: 2})
+    gsap.from(".profileIcon",{opacity:0,duration: 2})
+    gsap.fromTo("#update-form",{y: 500},{opacity:1, y:0,duration: 2})
+    import Toastify from 'toastify-js'
+    const getUserInfo = async()=>{
+        const res = await fetch(`http://localhost:3000/auth`,{
+			method: "GET",
+			credentials: "include"
+		})
+
+        const responce = await res.json()
+
+       // values
+        const id  = document.querySelector("#id") as HTMLInputElement
+        const fname = document.querySelector("#fname") as HTMLInputElement
+        const lname = document.querySelector("#lname") as HTMLInputElement
+        const age = document.querySelector("#age") as HTMLInputElement
+        const nationality = document.querySelector("#nationality") as HTMLInputElement
+        const mail = document.querySelector("#mail") as HTMLInputElement
+        const password = document.querySelector("#password") as HTMLInputElement
+
+        id.value = `${responce.id}`
+        fname.value = `${responce.fname}`
+        lname.value = `${responce.lname}`
+        age.value = `${responce.age}`
+        nationality.value = `${responce.nationality}`
+        mail.value = `${responce.mail}`
+    }
+
+    getUserInfo()
+
+    const updateForm = document.querySelector("#update-form") as HTMLFormElement
+    if(updateForm){
+        updateForm.addEventListener("submit",async(e)=>{
+            e.preventDefault()
+            const formdata = new FormData(e.target as HTMLFormElement)
+            const formObj = Object.fromEntries(formdata.entries())
+            const res = await fetch("http://localhost:3000/profile",{
+                    method: "POST",
+                    credentials: "include",
+                    headers:{
+                    "Content-Type": "application/json"
+                },
+                    // send the data
+                    body: JSON.stringify(formObj)
+                })
+                if(!res.ok){
+                    console.log(res)
+                    return
+                }
+            toast()
+            setTimeout(() => {
+                window.location.href = "/profile"
+            }, 2000); 
+
+        })
+    }
+
+    const toast = ()=>{
+        Toastify({
+            text: "Information updated",
+            duration: 3000,
+            style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+        }
+        }).showToast();
+    }
+</script>
+
+<style>
+    .container{
+        width: -100vw;
+        height: -100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    .profileIcon{
+        max-width: 20%;
+        width: auto;
+        margin: 2em auto 0 auto;
+    }
+    .gridform{
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+        margin:3em auto 0 auto;
+        gap: 1em;
+    }
+
+    .gridform > label{
+        color:white;
+        font-size: 1.6em;
+        margin: 0;
+        width: -100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .gridform > label > p {
+        width: 50%;
+    }
+
+    .gridform > label > input{
+        margin: 0 auto;
+        height: 2.5em;
+        border-radius: 10px;
+        width: 16em;
+        padding: 1em;
+    }
+
+    .submit-container{
+        width: 100%;
+        display: flex;
+        justify-content:center;
+    }
+
+    .submit-user{
+        font-size: 1em;
+        border: none;
+        color: white;
+        background-color: black;
+        width: 8em;
+        margin: 3em auto;
+        height: 3em;
+    }
+    .submit-user:hover{
+        cursor: pointer;
+    }
+    @media (min-width: 1200px) {
+        .gridform{
+            width: 80%;
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            grid-template-rows: repeat(4,1fr);
+            margin:3em auto 0 auto;
+            gap: 1em;
+        }
+        .gridform > label{
+            font-size: 2em;
+            margin: 0 1em;
+        }
+        .gridform > label > input{
+            width: 20em;
+        }
+    }
+</style>
