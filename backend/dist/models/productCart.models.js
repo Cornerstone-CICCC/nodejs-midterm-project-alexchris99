@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class productCart {
+class ProductCart {
     constructor() {
         // inmemory db cart
         this.usersCart = [];
@@ -108,5 +108,14 @@ class productCart {
         });
         return true;
     }
+    //search
+    search(text, obj) {
+        const foundItems = obj.filter(item => {
+            if (item.title.toLowerCase().includes(text.toLowerCase())) {
+                return item;
+            }
+        });
+        return foundItems;
+    }
 }
-exports.default = new productCart;
+exports.default = new ProductCart;
