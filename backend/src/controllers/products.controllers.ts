@@ -46,7 +46,6 @@ const deleteProduct = (req: Request<{},{},{id: number}>, res: Response)=>{
     
 
     if(!id){
-        console.log(`here ${id}`)
         res.status(404).send(false)
         return
     }

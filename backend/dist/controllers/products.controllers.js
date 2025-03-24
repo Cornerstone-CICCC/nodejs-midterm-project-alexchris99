@@ -45,7 +45,6 @@ const deleteProduct = (req, res) => {
     if (req.session && req.session.username) {
         const username = req.session.username;
         if (!id) {
-            console.log(`here ${id}`);
             res.status(404).send(false);
             return;
         }
