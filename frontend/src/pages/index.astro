@@ -12,10 +12,7 @@ import Layout from '../layouts/Layout.astro';
 		
 	</section>
 	<div class="pagination">
-		<button onclick="
-import { boolean } from "astro:schema";
-
-prev()" class="prev">Prev</button>
+		<button onclick="prev()" class="prev">Prev</button>
 		<button onclick="next()" class="next">Next</button>
 	</div>
 </Layout>
@@ -183,7 +180,7 @@ prev()" class="prev">Prev</button>
 			}
 			container.appendChild(item)
 		});
-		gsap.fromTo(".item-container",{y: 500},{opacity:1, y:0,stagger:0.5,duration: 5});
+		gsap.fromTo(".item-container",{y: 500},{opacity:1, y:0,stagger:0.1,duration: 2});
 	}
 
 	// generate the product info in the web page
