@@ -96,7 +96,6 @@ class productCart {
                 cart[username].forEach((item, index) => {
                     // delte the item
                     if (item.id == id && item.quantity === 1) {
-                        console.log("deleting item");
                         cart[username].splice(index, 1);
                     }
                     // deducting item
