@@ -28,7 +28,7 @@ if(!cookie_S || !cookie_En){
 
 //cors-conection to astro
 app.use(cors({
-    origin: "http://localhost:4321", // astro port
+    origin: "http://localhost:4322", // astro port
     credentials: true
 }))
 
