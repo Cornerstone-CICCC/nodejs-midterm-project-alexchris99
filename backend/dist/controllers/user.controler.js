@@ -73,13 +73,12 @@ const modifyUserInfo = (req, res) => __awaiter(void 0, void 0, void 0, function*
 const logUserIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // destruture the request body
     const { username, password } = req.body;
-    // TODO check status
     if (!username || !password) {
         res.status(401).send(false);
         return;
     }
     // if all the params exist
-    const userLogin = user_models_1.default.checkAuthUser(username, password);
+    const userLogin = yield user_models_1.default.checkAuthUser(username, password);
     // if user send incorrect params
     if (!userLogin) {
         res.status(500).send(false);

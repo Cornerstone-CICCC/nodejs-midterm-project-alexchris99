@@ -108,7 +108,6 @@ class userModel {
 
         // check if the username exist
         const userFound = this.users.findIndex(user => user.username === username)
-
         // if username dont exist
         if(userFound === -1){
             return false
@@ -116,7 +115,6 @@ class userModel {
 
         // check if password is a match
         const passwordIsMatch = await bcrypt.compare(password,this.users[userFound].password)
-
         if(!passwordIsMatch){
             return false
         }

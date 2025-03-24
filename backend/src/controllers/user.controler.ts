@@ -77,15 +77,13 @@ const logUserIn = async (req: Request, res: Response)=>{
     // destruture the request body
     const {username, password} = req.body
 
-    // TODO check status
     if(!username || !password){
         res.status(401).send(false)
         return
     }
 
     // if all the params exist
-    const userLogin = userModel.checkAuthUser(username,password)
-
+    const userLogin = await userModel.checkAuthUser(username,password)
     // if user send incorrect params
     if(!userLogin){
         res.status(500).send(false)
