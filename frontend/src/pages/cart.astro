@@ -12,7 +12,6 @@ import Header from "../components/Header.astro";
             <p class="total"></p>
         </div>
         <div class="cart-items">
-            <h2>Car empty</h2>
         </div>
     </div>
 </Layout>
@@ -178,7 +177,7 @@ import Header from "../components/Header.astro";
             text: `${text}`,
             duration: 3000,
             style: {
-            background: "linear-gradient(to right, #00b09b, #96c93d)",
+            background: "linear-gradient(to right, #DC143C, #96c93d)"
         }
         }).showToast();
     }
@@ -268,42 +267,11 @@ import Header from "../components/Header.astro";
             gap: 10em;
             position: relative;
         }
-        .user-info{
-            top: 1em;
-            position: sticky;
-            display: flex;
-            flex-direction: column;
-            gap: 1em;
-            text-align: center;
-            margin: 2em;
-            height: 30em;
-        }
-        .username{
-            font-size: 2em;
-            text-align: center;
-        }
-        .user-info > img{
-            width: 15em;
-        }
-        .items-quantity, .total{
-            font-size: 1.4em;
-        }
         .item{
-            color: black;
             width: 40em;
             height: 22em;
-            background-color: #C8D6E0;
-            margin: 0 auto;
-            border-radius: 10px;
         }
         
-        .item > h2{
-            margin: 1em;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
-            overflow: hidden;
-        }
 
         .article-container{
             display: flex;
@@ -311,30 +279,6 @@ import Header from "../components/Header.astro";
             justify-content: space-around;
             margin: 1em;
         }
-        
-        .image-container{
-            width: 15em;
-        }
-        .image-container > img{
-            max-width: 100%;
-            width: auto;
-        }
-        .info-container > p{
-            font-size: 1.4em;
-        }
-        .info-container{
-            display: flex;
-            flex-direction: column;
-            gap: 2em;
-            justify-content: center;
-        }
-        .actions{
-            display: flex;
-            flex-direction: row;
-            gap: 2em;
-        }
-        .actions > div:hover{
-            cursor: pointer;
-        }
+
     }
 </style>
