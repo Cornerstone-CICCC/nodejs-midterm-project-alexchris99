@@ -5,12 +5,17 @@ import Layout from '../layouts/Layout.astro';
 
 <Layout>
 	<Header/>
-	<div class="container">
-		<!-- <IoLogOut /> -->
+	<section class="container">
+		
+	</section>
+	<div class="pagination">
+		<button onclick="prev()" class="prev">Prev</button>
+		<button onclick="next()" class="next">Next</button>
 	</div>
 </Layout>
 
 <script>
+	import { gsap } from "gsap";
 	const getCookie = async()=>{
 		const res = await fetch(`http://localhost:3000/auth`,{
 			method: "GET",
@@ -21,7 +26,7 @@ import Layout from '../layouts/Layout.astro';
 	}
 
 	const changueHeader= async(auth: boolean)=>{
-
+		gsap.fromTo(".header-container",{x: -500},{opacity:1, x:0,duration: 2})
 		//logout btn
 		if(auth){
 			const header = document.querySelector(".header-container")as HTMLHeadElement
@@ -43,8 +48,6 @@ import Layout from '../layouts/Layout.astro';
 				}
 
 				window.location.href = "/profile"
-
-				//window.location.href = "/profile"
 			})
 			// logout
 			const logoutBtn =  document.querySelector("#logout") as HTMLDivElement
@@ -65,6 +68,8 @@ import Layout from '../layouts/Layout.astro';
 				})
 				window.location.href = "/cart"
 			})
+			gsap.fromTo(".header-container",{x: -500},{opacity:1, x:0,duration: 2});
+			gsap.fromTo(".pagination",{y: 500},{opacity:1, y:0,duration: 2});
 		}
 	}
 
@@ -73,6 +78,26 @@ import Layout from '../layouts/Layout.astro';
 
 
 <script is:inline>
+	let page = 1 
+	const next = async()=>{
+		page+=1
+		const container = document.querySelector(".container")
+		container.innerHTML = ""
+		scroll(0,0)
+		getCookie()
+	}
+
+	const prev = async()=>{
+		if(page === 1){
+			scroll(0,0)
+			return
+		}
+		page -= 1
+		const container = document.querySelector(".container")
+		container.innerHTML = ""
+		scroll(0,0)
+		getCookie()
+	}
 	
 	const getCookie = async()=>{
 		const res = await fetch(`http://localhost:3000/auth`,{
@@ -86,7 +111,7 @@ import Layout from '../layouts/Layout.astro';
 
 	// get products from api source
 	const getProducts = async()=>{
-		let res = await fetch('https://fakestoreapi.in/api/products')
+		let res = await fetch(`https://fakestoreapi.in/api/products?page=${page}&limit=15`)
 		res = await res.json()
 		// return the articles
 		return res
@@ -121,7 +146,8 @@ import Layout from '../layouts/Layout.astro';
 					<img src="/public/AddCart.png" alt="Add to cart">
 				`
 				addToCart.addEventListener("click",async()=>{
-					const res = await fetch("http://localhost:3000/product",{
+					toast()
+					await fetch("http://localhost:3000/product",{
 						method: "POST",
 						credentials: "include",
 						headers:{"Content-Type": "application/json"},
@@ -133,33 +159,47 @@ import Layout from '../layouts/Layout.astro';
 			}
 			container.appendChild(item)
 		});
+		gsap.fromTo(".item-container",{y: 500},{opacity:1, y:0,stagger:0.5,duration: 5});
 	}
 	
+	const toast = ()=>{
+        Toastify({
+            text: "Added to Cart",
+            duration: 3000,
+            style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+        }
+        }).showToast();
+    }
 
 	getCookie()
 </script>
 
 <style is:inline>
+	*{
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+	/* Phone */
 	img:hover{
 		cursor: pointer;
 	}
 	.container{
-		width: -90vw;
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		grid-template-rows: auto;
+		width: 90vw;
+		display: flex;
+		flex-direction: column;
 		gap: 1em;
 		margin: 1em auto;
-		justify-content: center;
-		justify-items: center;
+		align-items: center;
 	}
 	
 	.item-container{
-		margin: 0.5em 0;
-		background-color: #D9D9D9;
+		margin: 0.5em auto;
+		background-color: #8d8d8d;
 		color: black;
 		width:18em;
-		height: 16em;
+		height: 20.5em;
 		display: flex;
 		flex-direction: column;
 		justify-items: center;
@@ -184,6 +224,7 @@ import Layout from '../layouts/Layout.astro';
 	}
 
 	.item-image{
+		border-radius: 10px;
 		max-width: 100%;
 		width: auto;
 	}
@@ -202,5 +243,29 @@ import Layout from '../layouts/Layout.astro';
 
 	.add-to-cart > img{
 		margin: 0 1em;
+	}
+	.pagination{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 4em;
+		height: 8em;
+	}
+	.next,.prev{
+		width: 6em;
+		height: 4em;
+		background: none;
+		border: none;
+		color: white;
+	}
+	.next,.prev:hover{
+		cursor: pointer;
+	}
+	@media (min-width:1200px) {	
+		.container{
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			grid-template-rows: repeat(5, 1fr);
+		}
 	}
 </style>

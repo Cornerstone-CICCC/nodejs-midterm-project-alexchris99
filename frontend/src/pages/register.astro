@@ -7,28 +7,28 @@ import Layout from "../layouts/Layout.astro"
     <Header/>
     <div  class="container">
         <div class="form-container">
-            <h1>Register</h1>
+            <h1 class="register-title">Register</h1>
             <form action="/register" method="post" id="register-form">
                 <label>
-                    <p>First-name:</p> <input type="text" id="fname" name="fname">
+                    <p>First-name:</p> <input type="text" id="fname" name="fname" required>
                 </label>
                 <label>
-                    <p>Last-name:</p> <input type="text" id="lname" name="lname">
+                    <p>Last-name:</p> <input type="text" id="lname" name="lname" required>
                 </label>
                 <label>
-                    <p>Age:</p> <input type="number" id="age" name="age">
+                    <p>Age:</p> <input type="number" id="age" name="age" required>
                 </label>
                 <label>
-                    <p>Nationality:</p> <input type="text" id="nationality" name="nationality">
+                    <p>Nationality:</p> <input type="text" id="nationality" name="nationality" required>
                 </label>
                 <label>
-                    <p>Mail:</p> <input type="text" id="mail" name="mail">
+                    <p>Mail:</p> <input type="text" id="mail" name="mail" required>
                 </label>
                 <label>
-                    <p>Username:</p> <input type="text" id="username" name="username">
+                    <p>Username:</p> <input type="text" id="username" name="username" required>
                 </label>
                 <label>
-                    <p>Password:</p> <input type="password" id="password" name="password">
+                    <p>Password:</p> <input type="password" id="password" name="password" required>
                 </label>
                 <button  class="submit-user" type="submit">Create Account</button>
             </form>
@@ -40,6 +40,12 @@ import Layout from "../layouts/Layout.astro"
 </Layout>
 
 <script>
+    import { gsap } from "gsap";
+    import Toastify from 'toastify-js'
+    gsap.fromTo(".header-container",{x: -500},{opacity:1, x:0,duration: 2})
+    gsap.from(".register-title",{opacity:0,duration: 2})
+    gsap.fromTo("#register-form",{x: -500},{opacity:1, x:0,duration: 2})
+    gsap.fromTo(".register-image",{x: 500},{opacity:1, x:0,duration: 2})
     const register = document.querySelector("#register-form") as HTMLFormElement
     register.addEventListener("submit",async(e)=>{
         e.preventDefault()
@@ -62,9 +68,21 @@ import Layout from "../layouts/Layout.astro"
             window.location.href = "/register"
             return
         }
-
-        window.location.href = "/login"
+        toast()
+        setTimeout(() => {
+            window.location.href = "/login"
+        }, 3000);       
     })
+
+    const toast = ()=>{
+        Toastify({
+            text: "User created",
+            duration: 3000,
+            style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+        }
+        }).showToast();
+    }
 </script>
 
 <style>
@@ -72,9 +90,8 @@ import Layout from "../layouts/Layout.astro"
         box-sizing: border-box;
     }
     .container{
-        display: grid;
-        grid-template-columns:repeat(2,1fr);
-        grid-template-rows: auto;
+        display: flex;
+        flex-direction: column;
 
     }
     .form-container{
@@ -82,17 +99,23 @@ import Layout from "../layouts/Layout.astro"
         flex-direction: column;
     }
     .form-container > h1{
+        margin-top: .5em;
         font-size: 4em;
         text-align: center;
     }
     #register-form{
         display: flex;
         flex-direction: column;
-        gap:1em;
+        align-content: space-evenly; 
+        gap:2em;
+        background-image: url("/public/shop.png") ;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 20em;
     }
     #register-form > label{
-        font-size: 3em;
-        margin: 0 1em;
+        font-size: 2em;
+        margin: 0 .8em;
         width: -100%;
         display: flex;
         flex-direction: row;
@@ -106,7 +129,8 @@ import Layout from "../layouts/Layout.astro"
         margin: 0 auto;
         height: 2.5em;
         border-radius: 10px;
-        width: 20em;
+        width: 14em;
+        padding: 1em;
     }
 
     .submit-user{
@@ -119,7 +143,28 @@ import Layout from "../layouts/Layout.astro"
         height: 3em;
     }
     .register-image{
-        display: flex;
-        justify-content: center;
+        display: none;
+    }
+
+    @media (min-width: 1200px) {
+        .container{
+            display: grid;
+            grid-template-columns:repeat(2,1fr);
+            grid-template-rows: auto;
+        }
+        .register-image{
+            display: flex;
+            justify-content: center;
+        }
+        #register-form{
+            background-image: none;
+        }
+        #register-form > label{
+            font-size: 3em;
+        }
+        #register-form > label >input{
+            width: 20em;
+            margin: 0 1em;
+        }
     }
 </style>

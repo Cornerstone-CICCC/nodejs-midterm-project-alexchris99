@@ -28,9 +28,6 @@ import Layout from "../layouts/Layout.astro"
                     <p>Mail:</p> <input type="text" id="mail" name="mail">
                 </label>
                 <label>
-                    <p>Username:</p> <input type="text" id="username" name="username">
-                </label>
-                <label>
                     <p>Password:</p> <input type="password" id="password" name="password" placeholder="Type password">
                 </label>
             </div>
@@ -42,6 +39,11 @@ import Layout from "../layouts/Layout.astro"
 </Layout>
 
 <script>
+    import { gsap } from "gsap";
+    gsap.fromTo(".header-container",{x: -500},{opacity:1, x:0,duration: 2})
+    gsap.from(".profileIcon",{opacity:0,duration: 2})
+    gsap.fromTo("#update-form",{y: 500},{opacity:1, y:0,duration: 2})
+    import Toastify from 'toastify-js'
     const getUserInfo = async()=>{
         const res = await fetch(`http://localhost:3000/auth`,{
 			method: "GET",
@@ -57,7 +59,6 @@ import Layout from "../layouts/Layout.astro"
         const age = document.querySelector("#age") as HTMLInputElement
         const nationality = document.querySelector("#nationality") as HTMLInputElement
         const mail = document.querySelector("#mail") as HTMLInputElement
-        const username = document.querySelector("#username") as HTMLInputElement
         const password = document.querySelector("#password") as HTMLInputElement
 
         id.value = `${responce.id}`
@@ -66,7 +67,6 @@ import Layout from "../layouts/Layout.astro"
         age.value = `${responce.age}`
         nationality.value = `${responce.nationality}`
         mail.value = `${responce.mail}`
-        username.value = `${responce.username}`
     }
 
     getUserInfo()
@@ -90,11 +90,23 @@ import Layout from "../layouts/Layout.astro"
                     console.log(res)
                     return
                 }
+            toast()
+            setTimeout(() => {
+                window.location.href = "/profile"
+            }, 2000); 
 
-            console.log(res)
         })
     }
-    
+
+    const toast = ()=>{
+        Toastify({
+            text: "Information updated",
+            duration: 3000,
+            style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+        }
+        }).showToast();
+    }
 </script>
 
 <style>
@@ -111,17 +123,16 @@ import Layout from "../layouts/Layout.astro"
     }
     .gridform{
         width: 80%;
-        display: grid;
-        grid-template-columns: repeat(2,1fr);
-        grid-template-rows: repeat(4,1fr);
+        display: flex;
+        flex-direction: column;
         margin:3em auto 0 auto;
         gap: 1em;
     }
 
     .gridform > label{
         color:white;
-        font-size: 2em;
-        margin: 0 1em;
+        font-size: 1.6em;
+        margin: 0;
         width: -100%;
         display: flex;
         flex-direction: row;
@@ -137,11 +148,12 @@ import Layout from "../layouts/Layout.astro"
         margin: 0 auto;
         height: 2.5em;
         border-radius: 10px;
-        width: 20em;
+        width: 16em;
         padding: 1em;
     }
 
     .submit-container{
+        width: 100%;
         display: flex;
         justify-content:center;
     }
@@ -151,9 +163,28 @@ import Layout from "../layouts/Layout.astro"
         border: none;
         color: white;
         background-color: black;
-        width: 20%;
+        width: 8em;
         margin: 3em auto;
         height: 3em;
     }
-    
+    .submit-user:hover{
+        cursor: pointer;
+    }
+    @media (min-width: 1200px) {
+        .gridform{
+            width: 80%;
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            grid-template-rows: repeat(4,1fr);
+            margin:3em auto 0 auto;
+            gap: 1em;
+        }
+        .gridform > label{
+            font-size: 2em;
+            margin: 0 1em;
+        }
+        .gridform > label > input{
+            width: 20em;
+        }
+    }
 </style>
