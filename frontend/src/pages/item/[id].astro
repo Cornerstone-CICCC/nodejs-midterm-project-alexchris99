@@ -19,6 +19,7 @@ import Layout from "../../layouts/Layout.astro"
 </Layout>
 
 <script is:inline>
+
 	const getCookie = async()=>{
 		const res = await fetch(`http://localhost:3000/auth`,{
 			method: "GET",
@@ -30,7 +31,6 @@ import Layout from "../../layouts/Layout.astro"
 	const getProducts = async()=>{
 		const id = Number(window.location.pathname.split("/")
 		[window.location.pathname.split("/").length-1])
-		console.log(id)
 		let res = await fetch(`https://fakestoreapi.in/api/products/${id}`)
 		res = await res.json()
 		//return the article
@@ -41,31 +41,31 @@ import Layout from "../../layouts/Layout.astro"
 	const genArticles = async(auth)=>{
 		let article = await getProducts()
 		article = article.product
-		console.log(article)
 		const container = document.querySelector(".container")
 		const item = document.createElement("div")
 		item.classList.add("item")
 		item.innerHTML = `
-			<h5 class="item-title">${article.title}</h5>
+			<h1 class="item-title">${article.title}</h1>
 			<div class="info-container">
 				<div class="image-container">
 					<img class="item-image" src="${article.image}">
 				</div>
 				<div class="item-info">
+					<p>Brand: ${article.brand}</p>
 					<p>Category: ${article.category}</p>
 					<p>Price $${article.price}</p>
-					<span>Brand: ${article.brand}</span>
 				</div>
 			</div>	
-			<p>Description: ${article.description}</p>
+			<p class="desc">${article.description}</p>
 		`
 		if(auth){
-				const addToCart = document.createElement("button")
-				addToCart.innerHTML = `<div><img src="/public/AddCart.png"></div>`
+				const addToCart = document.createElement("div")
+				addToCart.innerHTML = `<div class="add-image"><img class="add-to-cart" src="/public/AddCart.png"></div>`
 				item.querySelector(".item-info").appendChild(addToCart)
 			}
 		container.appendChild(item)
-		//logout btn
+		
+
 		if(auth){
 			document.querySelector(".header-container").innerHTML = `
 					<div><img id="home" src="/public/Home.png" alt="Home"><img id="logout" src="/public/Logout.png" alt="Logout"></div>
@@ -81,12 +81,41 @@ import Layout from "../../layouts/Layout.astro"
 
 				window.location.href = "/"
 			})
+
+			const homeBtn = document.querySelector("#home")
+			homeBtn.addEventListener("click",async()=>{
+				window.location.href = "/"
+			})
+
+			const userCart = document.querySelector("#cart")
+			userCart.addEventListener("click", async()=>{
+				await fetch("http://localhost:3000/cart",{
+					method: "GET",
+					credentials: "include"
+				})
+				window.location.href = "/cart"
+			})
+
+			const addItem = document.querySelector(".add-to-cart")
+			addItem.addEventListener("click",async()=>{
+				await fetch("http://localhost:3000/product",{
+						method: "POST",
+						credentials: "include",
+						headers:{"Content-Type": "application/json"},
+						// send the data
+						body: JSON.stringify(article)
+				})
+			})
 		}
 	}
 	getCookie()
 </script>
 
 <style is:inline>
+
+	img{
+		cursor: pointer;
+	}
 	.container{
 		display: flex;
 		flex-direction: column;
@@ -94,24 +123,30 @@ import Layout from "../../layouts/Layout.astro"
 		margin: 1em;
 	}
 	.item{
+		width:80%;
+		margin: 0 auto;
+		color: black;
 		display: flex;
 		flex-direction: column;
+		background-color: #C8D6E0;
+		gap: 2em;
+		border-radius: 10px;
 	}
 	
-	.item-container{
-		width: 100%;
+	.info-container{
 		display: flex;
-		flex-direction: column;
-		justify-items: center;
-		align-items: center;
+		flex-direction: row;
+		align-content: space-around;
+		justify-content: space-around;
 	}
 
-	.item-container > h4{
+	.item > h1{
+		margin: 1em 1em 0 1em;
 		font-family: Arial, Helvetica, sans-serif;
 	}
 	
 	.image-container{
-		width: 6em;
+		width: 20em;
 	}
 
 	.item-image{
@@ -120,7 +155,19 @@ import Layout from "../../layouts/Layout.astro"
 	}
 	.item-info{
 		display: flex;
-		flex-direction: row;
+		flex-direction: column;
 		gap: 1em;
+		font-size: 2em;
+		justify-content: center;
+		align-content: center;
+	}
+
+	.desc{
+		margin: 1em;
+		font-size: 1.4em;
+	}
+
+	.add-image > img{
+		width: 1.8em;
 	}
 </style>
