@@ -73,6 +73,7 @@ import Layout from '../layouts/Layout.astro';
 			})
 			gsap.fromTo(".header-container",{x: -500},{opacity:1, x:0,duration: 2});
 			gsap.fromTo(".pagination",{y: 500},{opacity:1, y:0,duration: 2});
+			gsap.from(".search",{opacity:0,duration: 2})
 		}
 	}
 	getCookie()
